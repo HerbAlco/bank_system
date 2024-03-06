@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/auth/person")
+@CrossOrigin("http://localhost:3000")
 public class UserController {
 
 	@Autowired
@@ -30,7 +31,7 @@ public class UserController {
 	}
 
 
-	@GetMapping
+	@GetMapping("/allusers")
 	public ResponseEntity<List<User>> getAllUsers() {
 		List<User> users = userService.findAll();
 		return ResponseEntity.ok(users);
