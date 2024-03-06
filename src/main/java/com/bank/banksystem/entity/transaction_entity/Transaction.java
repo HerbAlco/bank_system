@@ -1,12 +1,12 @@
 package com.bank.banksystem.entity.transaction_entity;
 
-import com.bank.banksystem.entity.account_entity.Account;
+import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@MappedSuperclass
+@Entity
 public abstract class Transaction {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +20,12 @@ public abstract class Transaction {
 
 	@ManyToOne
 	@JoinColumn(name = "account_id", nullable = false)
-	private Account account;
+	private BankAccount account;
 
 	protected Transaction() {
 	}
 
-	protected Transaction(BigDecimal amount, Account account) {
+	protected Transaction(BigDecimal amount, BankAccount account) {
 		this.amount = amount;
 		this.timestamp = LocalDateTime.now();
 		this.account = account;
@@ -47,11 +47,11 @@ public abstract class Transaction {
 		return timestamp;
 	}
 
-	public Account getAccount() {
+	public BankAccount getAccount() {
 		return account;
 	}
 
-	public void setAccount(Account account) {
+	public void setAccount(BankAccount account) {
 		this.account = account;
 	}
 

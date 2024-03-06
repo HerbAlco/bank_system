@@ -1,6 +1,6 @@
 package com.bank.banksystem.service;
 
-import com.bank.banksystem.entity.account_entity.Account;
+import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.exceptions.InsufficientFundsException;
 import com.bank.banksystem.exceptions.ResourceNotFoundException;
 import com.bank.banksystem.repository.AccountRepository;
@@ -22,19 +22,19 @@ public class AccountService {
 	}
 
 	@Transactional(readOnly = true)
-	public Account findAccountById(Long id) {
+	public BankAccount findAccountById(Long id) {
 		return accountRepository.findById(id)
 			.orElseThrow(() -> new ResourceNotFoundException("Account not found with id " + id));
 	}
 
 	@Transactional(readOnly = true)
-	public List<Account> findAllAccounts() {
+	public List<BankAccount> findAllAccounts() {
 		return accountRepository.findAll();
 	}
 
 	@Transactional
-	public Account saveAccount(Account newAccount){
-		return accountRepository.save(newAccount);
+	public BankAccount saveAccount(BankAccount newBankAccount){
+		return accountRepository.save(newBankAccount);
 	}
 
 	@Transactional
@@ -44,45 +44,45 @@ public class AccountService {
 
 	@Transactional
 	public void deposit(Long accountId, BigDecimal amount) {
-		Account account = accountRepository.findById(accountId)
+		BankAccount bankAccount = accountRepository.findById(accountId)
 			.orElseThrow(() -> new ResourceNotFoundException("Account not found with id " + accountId));
 
-		account.setBalance(account.getBalance().add(amount));
-		accountRepository.save(account);
+		bankAccount.setBalance(bankAccount.getBalance().add(amount));
+		accountRepository.save(bankAccount);
 	}
 
 	@Transactional
 	public void withdraw(Long accountId, BigDecimal amount) {
-		Account account = accountRepository.findById(accountId)
+		BankAccount bankAccount = accountRepository.findById(accountId)
 			.orElseThrow(() -> new ResourceNotFoundException("Account not found with id " + accountId));
 
-		BigDecimal newBalance = account.getBalance().subtract(amount);
+		BigDecimal newBalance = bankAccount.getBalance().subtract(amount);
 
 		if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
 			throw new InsufficientFundsException("Insufficient funds for withdrawal");
 		}
 
-		account.setBalance(newBalance);
-		accountRepository.save(account);
+		bankAccount.setBalance(newBalance);
+		accountRepository.save(bankAccount);
 	}
 
 	@Transactional
 	public void transfer(Long fromAccountId, Long toAccountId, BigDecimal amount) {
-		Account fromAccount = accountRepository.findById(fromAccountId)
+		BankAccount fromBankAccount = accountRepository.findById(fromAccountId)
 			.orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + fromAccountId));
 
-		Account toAccount = accountRepository.findById(toAccountId)
+		BankAccount toBankAccount = accountRepository.findById(toAccountId)
 			.orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + toAccountId));
 
-		if (fromAccount.getBalance().compareTo(amount) < 0) {
+		if (fromBankAccount.getBalance().compareTo(amount) < 0) {
 			throw new InsufficientFundsException("Nedostatečný zůstatek na účtu pro provedení převodu");
 		}
 
-		fromAccount.setBalance(fromAccount.getBalance().subtract(amount));
-		toAccount.setBalance(toAccount.getBalance().add(amount));
+		fromBankAccount.setBalance(fromBankAccount.getBalance().subtract(amount));
+		toBankAccount.setBalance(toBankAccount.getBalance().add(amount));
 
-		accountRepository.save(fromAccount);
-		accountRepository.save(toAccount);
+		accountRepository.save(fromBankAccount);
+		accountRepository.save(toBankAccount);
 	}
 
 }

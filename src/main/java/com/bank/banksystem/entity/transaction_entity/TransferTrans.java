@@ -1,6 +1,8 @@
 package com.bank.banksystem.entity.transaction_entity;
 
-import com.bank.banksystem.entity.account_entity.Account;
+
+
+import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.exceptions.InsufficientFundsException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -11,14 +13,14 @@ import java.math.BigDecimal;
 public class TransferTrans extends Transaction {
 
 	@ManyToOne
-	private Account toAccount;
+	private BankAccount toAccount;
 
-	public TransferTrans(BigDecimal amount, Account fromAccount, Account toAccount) {
+	public TransferTrans(BigDecimal amount, BankAccount fromAccount, BankAccount toAccount) {
 		super(amount, fromAccount);
 		this.toAccount = toAccount;
 	}
 
-	public Account getToAccount() {
+	public BankAccount getToAccount() {
 		return toAccount;
 	}
 

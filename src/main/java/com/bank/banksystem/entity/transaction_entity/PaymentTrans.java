@@ -1,6 +1,6 @@
 package com.bank.banksystem.entity.transaction_entity;
 
-import com.bank.banksystem.entity.account_entity.Account;
+import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.exceptions.InsufficientFundsException;
 import jakarta.persistence.Entity;
 
@@ -11,7 +11,7 @@ public class PaymentTrans extends Transaction {
 
 	private String paymentDetails;
 
-	public PaymentTrans(BigDecimal amount, Account account, String paymentDetails) {
+	public PaymentTrans(BigDecimal amount, BankAccount account, String paymentDetails) {
 		super(amount, account);
 		this.paymentDetails = paymentDetails;
 	}

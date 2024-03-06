@@ -1,6 +1,6 @@
 package com.bank.banksystem.controller;
 
-import com.bank.banksystem.entity.account_entity.Account;
+import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.entity.transaction_entity.Transaction;
 import com.bank.banksystem.service.AccountService;
 import com.bank.banksystem.service.TransactionService;
@@ -25,33 +25,28 @@ public class AccountController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<Account>> getAllAccounts() {
-		List<Account> accounts = accountService.findAllAccounts();
-		return ResponseEntity.ok(accounts);
+	public ResponseEntity<List<BankAccount>> getAllAccounts() {
+		List<BankAccount> bankAccount = accountService.findAllAccounts();
+		return ResponseEntity.ok(bankAccount);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<Account> getAccountById(@PathVariable Long id) {
-		Account account = accountService.findAccountById(id);
-		return ResponseEntity.ok(account);
+	public ResponseEntity<BankAccount> getAccountById(@PathVariable Long id) {
+		BankAccount bankAccount = accountService.findAccountById(id);
+		return ResponseEntity.ok(bankAccount);
 	}
 
 	@PostMapping
-	public ResponseEntity<Account> createAccount(@RequestBody Account account) {
-		Account newAccount = accountService.saveAccount(account);
-		return ResponseEntity.ok(newAccount);
+	public ResponseEntity<BankAccount> createAccount(@RequestBody BankAccount bankAccount) {
+		BankAccount newBankAccount = accountService.saveAccount(bankAccount);
+		return ResponseEntity.ok(newBankAccount);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Account> updateAccount(@PathVariable Long id, @RequestBody Account accountDetails) {
-		Account existingAccount = accountService.findAccountById(id);
-		// Aktualizujte existující účet s novými detaily
-		// Toto je místo, kde byste měli implementovat logiku aktualizace
-		// Například:
-		// existingAccount.setBalance(accountDetails.getBalance());
-		// ... další nastavení polí
-		Account updatedAccount = accountService.saveAccount(existingAccount);
-		return ResponseEntity.ok(updatedAccount);
+	public ResponseEntity<BankAccount> updateAccount(@PathVariable Long id, @RequestBody BankAccount bankAccountDetails) {
+		BankAccount existingBankAccount = accountService.findAccountById(id);
+		BankAccount updatedBankAccount = accountService.saveAccount(existingBankAccount);
+		return ResponseEntity.ok(updatedBankAccount);
 	}
 
 	@DeleteMapping("/{id}")

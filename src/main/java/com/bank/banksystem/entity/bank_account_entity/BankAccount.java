@@ -1,18 +1,13 @@
-package com.bank.banksystem.entity.account_entity;
+package com.bank.banksystem.entity.bank_account_entity;
 
-import com.bank.banksystem.entity.person_entity.Person;
 import jakarta.persistence.Entity;
 import java.math.BigDecimal;
 
 @Entity
-public class CheckingAccount extends Account {
+public class BankAccount extends AbstractBankAccount {
 
-	public CheckingAccount() {
+	public BankAccount() {
 		super();
-	}
-
-	public CheckingAccount(String accountNumber, BigDecimal balance, Person owner) {
-		super(accountNumber, balance, AccountType.CHECKING, owner);
 	}
 
 	@Override

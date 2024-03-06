@@ -1,40 +1,24 @@
 package com.bank.banksystem.entity.address_entity;
 
-import com.bank.banksystem.entity.person_entity.Person;
 import jakarta.persistence.*;
 
-@Entity
+@Embeddable
 public class Address {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+
 	private String street;
 	private String city;
-	private String zipCode;
+	private String postalCode;
 	private String state;
 	private String country;
 
-	@ManyToOne
-	@JoinColumn(name = "person_id")
-	private Person person;
-
 	public Address() {
 	}
-
-	public Address(String street, String city, String zipCode, String state, String country) {
+	public Address(String street, String city, String postalCode, String state, String country) {
 		this.street = street;
 		this.city = city;
-		this.zipCode = zipCode;
+		this.postalCode = postalCode;
 		this.state = state;
 		this.country = country;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getStreet() {
@@ -53,12 +37,12 @@ public class Address {
 		this.city = city;
 	}
 
-	public String getZipCode() {
-		return zipCode;
+	public String getPostalCode() {
+		return postalCode;
 	}
 
-	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
 	}
 
 	public String getState() {
@@ -78,17 +62,9 @@ public class Address {
 	}
 
 
-	public Person getPerson() {
-		return person;
-	}
-
-	public void setPerson(Person person) {
-		this.person = person;
-	}
-
 	@Override
 	public String toString() {
-		return "Address [id=" + id + ", street=" + street + ", city=" + city + ", zipCode=" + zipCode +
+		return "Address [street=" + street + ", city=" + city + ", zipCode=" + postalCode +
 			", state=" + state + ", country=" + country + "]";
 	}
 }
