@@ -12,9 +12,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Configuration
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class ApplicationConfig {
 
 	private final UserRepository repository;

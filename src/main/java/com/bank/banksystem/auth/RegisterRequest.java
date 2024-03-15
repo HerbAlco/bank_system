@@ -1,5 +1,8 @@
 package com.bank.banksystem.auth;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+@CrossOrigin(origins = "http://localhost:3000")
 public class RegisterRequest {
 
 	private String firstname;
