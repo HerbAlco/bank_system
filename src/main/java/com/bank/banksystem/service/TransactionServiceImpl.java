@@ -23,7 +23,7 @@ public class TransactionServiceImpl implements TransactionService {
 	@Override
 	@Transactional
 	public Transaction createTransaction(Transaction transaction) {
-		transaction.execute(); // Vyvolá metodu execute konkrétní transakce
+		transaction.execute();
 		return transactionRepository.save(transaction);
 	}
 

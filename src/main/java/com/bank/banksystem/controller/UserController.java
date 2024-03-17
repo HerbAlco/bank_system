@@ -1,13 +1,16 @@
 package com.bank.banksystem.controller;
 
 import com.bank.banksystem.entity.address_entity.Address;
+import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.entity.user_entity.User;
+import com.bank.banksystem.service.AccountService;
 import com.bank.banksystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,13 +23,22 @@ public class UserController {
 	private UserService userService;
 
 	@Autowired
-	public UserController(UserService userService) {
+	private AccountService accountService;
+
+	@Autowired
+	public UserController(UserService userService, AccountService accountService) {
 		this.userService = userService;
+		this.accountService = accountService;
 	}
 
 	@PostMapping("/add")
 	public ResponseEntity<User> addPerson(@RequestBody User person) {
 		User savedPerson = userService.save(person);
+		BankAccount newBankAccount = new BankAccount();
+		newBankAccount.setUser(savedPerson);
+		newBankAccount.setAccountNumber("CZ100005");
+		newBankAccount.setBalance(BigDecimal.valueOf(100));
+		accountService.createBankAccount(newBankAccount);
 		return new ResponseEntity<>(savedPerson, HttpStatus.CREATED);
 	}
 

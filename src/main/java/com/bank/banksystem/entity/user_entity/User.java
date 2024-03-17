@@ -1,6 +1,8 @@
 package com.bank.banksystem.entity.user_entity;
 
+import com.bank.banksystem.BankSystemApplication;
 import com.bank.banksystem.entity.address_entity.Address;
+import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ import java.util.List;
 @Entity
 @Table(name = ("_user"))
 public class User implements UserDetails {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -39,16 +42,6 @@ public class User implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return List.of(new SimpleGrantedAuthority(role.name()));
-	}
-
-	@Override
-	public String getPassword() {
-		return password;
-	}
-
-	@Override
-	public String getUsername() {
-		return email;
 	}
 
 	@Override

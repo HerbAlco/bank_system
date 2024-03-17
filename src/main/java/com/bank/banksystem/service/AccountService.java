@@ -1,24 +1,29 @@
 package com.bank.banksystem.service;
 
 import com.bank.banksystem.entity.bank_account_entity.BankAccount;
+import com.bank.banksystem.entity.user_entity.User;
 import com.bank.banksystem.exceptions.InsufficientFundsException;
 import com.bank.banksystem.exceptions.ResourceNotFoundException;
 import com.bank.banksystem.repository.AccountRepository;
+import com.bank.banksystem.repository.UserRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-
+@AllArgsConstructor
+@NoArgsConstructor
 @Service
 public class AccountService {
 
-	private final AccountRepository accountRepository;
-
 	@Autowired
-	public AccountService(AccountRepository accountRepository) {
-		this.accountRepository = accountRepository;
+	private AccountRepository accountRepository;
+
+	public BankAccount createBankAccount(BankAccount bankAccount) {
+		return accountRepository.save(bankAccount);
 	}
 
 	@Transactional(readOnly = true)
