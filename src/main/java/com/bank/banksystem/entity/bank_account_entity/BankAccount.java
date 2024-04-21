@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.random.RandomGenerator;
 
 @Data
 @Builder
@@ -26,7 +28,7 @@ public class BankAccount {
 	private Long id;
 
 	@Column(nullable = false, unique = true)
-	private String accountNumber;
+	private final String accountNumber = "CZ100025" + new Random().nextInt(90000) + 10000;
 
 	@Column(nullable = false)
 	private BigDecimal balance;
@@ -35,16 +37,11 @@ public class BankAccount {
 	private AccountType accountType;
 
 	@ManyToOne
-	@JoinColumn(name = "owner_id", nullable = false)
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
 	@OneToMany(mappedBy = "account")
 	private List<Transaction> transactions;
-
-	public void addTransaction(Transaction transaction) {
-		this.transactions.add(transaction);
-		transaction.setAccount(this);
-	}
 
 }
 

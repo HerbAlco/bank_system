@@ -1,10 +1,7 @@
 package com.bank.banksystem.entity.user_entity;
 
-import com.bank.banksystem.BankSystemApplication;
 import com.bank.banksystem.entity.address_entity.Address;
-import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor

@@ -1,11 +1,15 @@
 package com.bank.banksystem.service;
 
 import com.bank.banksystem.entity.transaction_entity.Transaction;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
+@Service
 
-public interface TransactionService {
-	Transaction createTransaction(Transaction transaction);
-	List<Transaction> getTransactionsForAccount(Long accountId);
+public class TransactionService extends GenericService<Transaction, Long>{
+
+	public TransactionService(JpaRepository<Transaction, Long> repository)
+	{
+		super(repository);
+	}
 }
-

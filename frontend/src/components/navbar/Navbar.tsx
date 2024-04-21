@@ -1,23 +1,58 @@
-import React from 'react';
+import { AppBar, Box, Button, CssBaseline, IconButton, Toolbar, Typography } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import { useNavigate } from 'react-router-dom';
 
-export default function Navbar() {
+
+const navItems = ['Domů', 'O nás', 'Odhlásit se']; // Přidáme možnost odhlásit se
+
+const Navbar: React.FC = () => {
+  const handleLogout = () => {
+    console.log('Odhlášení uživatele');
+    localStorage.removeItem('token');
+  };
+
+  const handleItemClick = (item: string) => {
+    if (item === 'Odhlásit se') {
+      handleLogout();
+    }
+  };
+
   return (
-    <div>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div className="container-fluid">
-          <a className="navbar-brand" href="#">Bank-System</a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-        </div>
-      </nav>
-    </div>
-  )
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBar component="nav">
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1 }}
+          >
+            Bankovní systém
+          </Typography>
+          <Box>
+            {navItems.map((item) => (
+              <Button key={item} sx={{ color: '#fff' }} onClick={() => handleItemClick(item)}>
+                {item}
+              </Button>
+            ))}
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <Box component="main" sx={{ p: 3 }}>
+        <Toolbar />
+        <Typography>
+        </Typography>
+      </Box>
+    </Box>
+  );
 }
+
+export default Navbar;
