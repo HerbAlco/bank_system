@@ -3,8 +3,6 @@ import Home from './pages/home/Home';
 import LoginPage from './pages/login_registration/LoginPage';
 import RegistrationPage from './pages/login_registration/RegistrationPage';
 import Navbar from './components/navbar/Navbar';
-import Header from './components/header/Header';
-
 
 const App = () => {
   return (

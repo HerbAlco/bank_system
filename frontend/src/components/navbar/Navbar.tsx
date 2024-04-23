@@ -2,15 +2,14 @@ import { AppBar, Box, Button, CssBaseline, IconButton, Toolbar, Typography } fro
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 
-const navItems = ['Domů', 'O nás', 'Odhlásit se'];
-
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
+  const isLoggedIn = localStorage.getItem('token') !== null;
 
   const handleLogout = () => {
     console.log('Odhlášení uživatele');
     localStorage.removeItem('token');
-    navigate('/login')
+    navigate('/login');
   };
 
   const handleItemClick = (item: string) => {
@@ -40,11 +39,15 @@ const Navbar: React.FC = () => {
             Bankovní systém
           </Typography>
           <Box>
-            {navItems.map((item) => (
-              <Button key={item} sx={{ color: '#fff' }} onClick={() => handleItemClick(item)}>
-                {item}
+            {isLoggedIn ? (
+              <Button key="Odhlásit se" sx={{ color: '#fff' }} onClick={() => handleItemClick('Odhlásit se')}>
+                Odhlásit se
               </Button>
-            ))}
+            ) : (
+              <Button key="Přihlásit se" sx={{ color: '#fff' }} onClick={() => navigate('/login')}>
+                Přihlásit se
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </AppBar>

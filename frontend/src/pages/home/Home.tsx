@@ -16,7 +16,7 @@ const Home = () => {
 
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/v1/authResponse', {
+        const response = await fetch('http://localhost:8080/api/v1/auth/authResponse', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
