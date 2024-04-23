@@ -2,13 +2,15 @@ import { AppBar, Box, Button, CssBaseline, IconButton, Toolbar, Typography } fro
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 
-
-const navItems = ['Domů', 'O nás', 'Odhlásit se']; // Přidáme možnost odhlásit se
+const navItems = ['Domů', 'O nás', 'Odhlásit se'];
 
 const Navbar: React.FC = () => {
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     console.log('Odhlášení uživatele');
     localStorage.removeItem('token');
+    navigate('/login')
   };
 
   const handleItemClick = (item: string) => {

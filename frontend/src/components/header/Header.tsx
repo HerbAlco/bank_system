@@ -25,9 +25,9 @@ export default function Header() {
         <MenuItem onClick={handleClose}>Platební karty</MenuItem>
         <MenuItem onClick={handleClose}>Šablony</MenuItem>
         <Box sx={{ flexGrow: 1 }} />
-        <MenuItem component={Link} to="/account" sx={{ mr: 2 }}>
-          Informace o účtě
-        </MenuItem>
+
+        Informace o účtě
+
         <Button color="inherit"><AccountCircle /></Button>
       </Toolbar>
     </AppBar>
