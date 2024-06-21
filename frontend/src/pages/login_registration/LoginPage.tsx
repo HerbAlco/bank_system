@@ -9,19 +9,15 @@ import {
   Button,
   Grid,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-interface LoginPageProps {
-  isLoggedIn: boolean;
-}
-
-const LoginPage: React.FC<LoginPageProps> = ({ isLoggedIn }) => {
+const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  
+
   const handleLogin = async () => {
     try {
       const response = await axios.post("http://localhost:8080/api/v1/auth/authenticate", {
@@ -29,14 +25,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ isLoggedIn }) => {
         password,
       });
       const token = response.data.token;
-      localStorage.setItem("token", token);
-      isLoggedIn(true);
-      navigate("/");
+      localStorage.setItem("token", token); // Uložení tokenu do localStorage
+      navigate("/"); // Přesměrování na domovskou stránku po úspěšném přihlášení
     } catch (error) {
       console.error("Chyba při přihlašování:", error);
     }
   };
-};
 
   return (
     <>
@@ -44,6 +38,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ isLoggedIn }) => {
         <CssBaseline />
         <Box
           sx={{
+            mt: 20,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",

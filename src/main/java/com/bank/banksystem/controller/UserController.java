@@ -1,39 +1,47 @@
 package com.bank.banksystem.controller;
 
+import com.bank.banksystem.entity.address_entity.Address;
 import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.entity.user_entity.User;
 import com.bank.banksystem.service.AccountService;
 import com.bank.banksystem.service.UserService;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/auth/user")
+@RequestMapping("/api/v1/auth/person")
 @CrossOrigin(origins = "http://localhost:3000")
-@AllArgsConstructor
 public class UserController {
 
-	private final UserService userService;
-	private final AccountService accountService;
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private AccountService accountService;
+
+	@Autowired
+	public UserController(UserService userService, AccountService accountService) {
+		this.userService = userService;
+		this.accountService = accountService;
+	}
 
 	@PostMapping("/add")
-	public ResponseEntity<User> addUser(@RequestBody User user) {
-		//TODO: vytvoření accountu pro usera pri registraci nového usera
-//		User savedUser = userService.save(user);
-//		BankAccount newBankAccount = new BankAccount();
-//		newBankAccount.setUser(savedUser);
-//		newBankAccount.setBalance(BigDecimal.valueOf(100));
-//		accountService.save(newBankAccount);
-
-		return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
+	public ResponseEntity<User> addPerson(@RequestBody User person) {
+		User savedPerson = userService.save(person);
+		BankAccount newBankAccount = new BankAccount();
+		newBankAccount.setUser(savedPerson);
+		newBankAccount.setAccountNumber("CZ100005");
+		newBankAccount.setBalance(BigDecimal.valueOf(100));
+		accountService.createBankAccount(newBankAccount);
+		return new ResponseEntity<>(savedPerson, HttpStatus.CREATED);
 	}
+
 
 	@GetMapping("/allusers")
 	public ResponseEntity<List<User>> getAllUsers() {
@@ -41,63 +49,29 @@ public class UserController {
 		return ResponseEntity.ok(users);
 	}
 
-	@GetMapping("/getuser/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<User> getUserById(@PathVariable Long id) {
-		Optional<User> user = userService.findById(id);
-		return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+		User user = userService.findById(id);
+		return ResponseEntity.ok(user);
 	}
 
-	@PutMapping("/update/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-		Optional<User> existingUserOptional = userService.findById(id);
-		if (existingUserOptional.isPresent()) {
-			User existingUser = existingUserOptional.get();
-
-			if (updatedUser.getFirstName() != null) {
-				existingUser.setFirstName(updatedUser.getFirstName());
-			}
-			if (updatedUser.getLastName() != null) {
-				existingUser.setLastName(updatedUser.getLastName());
-			}
-			if (updatedUser.getEmail() != null) {
-				existingUser.setEmail(updatedUser.getEmail());
-			}
-			if (updatedUser.getUsername() != null) {
-				existingUser.setUsername(updatedUser.getUsername());
-			}
-			if (updatedUser.getPassword() != null) {
-				existingUser.setPassword(updatedUser.getPassword());
-			}
-			if (updatedUser.getBirthDate() != null) {
-				existingUser.setBirthDate(updatedUser.getBirthDate());
-			}
-			if (updatedUser.getAddress() != null) {
-				existingUser.setAddress(updatedUser.getAddress());
-			}
-			if (updatedUser.getPhoneNumber() != null) {
-				existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-			}
-			if (updatedUser.getRole() != null) {
-				existingUser.setRole(updatedUser.getRole());
-			}
-
-			userService.save(existingUser);
-			return ResponseEntity.ok(existingUser);
-		} else {
-			return ResponseEntity.notFound().build();
-		}
+	@PutMapping("/{id}")
+	public ResponseEntity<User> updateUser(@PathVariable Long id,
+		@RequestParam String firstName,
+		@RequestParam String lastName,
+		@RequestParam String email,
+		@RequestParam LocalDate birthDate,
+		@RequestParam String street,
+		@RequestParam String city,
+		@RequestParam String zipCode,
+		@RequestParam String state,
+		@RequestParam String country,
+		@RequestParam String phoneNumber,
+		@RequestParam String username,
+		@RequestParam String password) {
+		Address address = new Address(street, city, zipCode, state, country);
+		User updatedUser = userService.updateUser(id, firstName, lastName, email, birthDate, address, username, password, phoneNumber);
+		return ResponseEntity.ok(updatedUser);
 	}
 
-
-	@DeleteMapping("/delete/{id}")
-	@Transactional
-	public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-		Optional<User> user = userService.findById(id);
-		if (user.isPresent()) {
-			userService.deleteById(id);
-			return ResponseEntity.ok("User with ID " + id + " has been successfully deleted.");
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with ID " + id + " not found.");
-		}
-	}
 }

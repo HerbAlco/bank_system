@@ -34,7 +34,7 @@ import {
       try {
         await axios.post("http://localhost:8080/api/v1/auth/register", formData);
         console.log("Registrace úspěšná");
-        navigate("/login");
+        navigate("/login"); // Přesměrování na přihlašovací stránku po úspěšné registraci
       } catch (error) {
         console.error("Chyba při registraci:", error);
       }
@@ -46,6 +46,7 @@ import {
           <CssBaseline />
           <Box
             sx={{
+              mt: 20,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",

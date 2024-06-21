@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = ("_transaction"))
-public class Transaction
-{
+public abstract class Transaction {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,16 +24,12 @@ public class Transaction
 	private BigDecimal amount;
 
 	@Column(nullable = false)
-	private LocalDateTime dateTimeTrans;
+	private LocalDateTime timestamp;
 
 	@ManyToOne
 	@JoinColumn(name = "account_id", nullable = false)
 	private BankAccount account;
 
-	private String symbol;
-
-	private String note;
-
-	private TransType transType;
+	public abstract void execute();
 }
 
