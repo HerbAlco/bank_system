@@ -24,10 +24,16 @@ public class AccountController {
 	private final AccountService accountService;
 	private final UserService userService;
 
-	@GetMapping("/getall")
-	public ResponseEntity<List<BankAccount>> getAllAccounts() {
-		List<BankAccount> bankAccounts = accountService.findAll();
-		return ResponseEntity.ok(bankAccounts);
+	@PostMapping("/create/{id}")
+	public ResponseEntity<BankAccount> createAccount(@PathVariable Long id, @RequestBody BankAccount bankAccount) {
+		Optional<User> optionalUser = userService.findById(id);
+		if (optionalUser.isPresent()) {
+			bankAccount.setUser(optionalUser.get());
+			BankAccount savedBankAccount = accountService.save(bankAccount);
+			return ResponseEntity.ok(savedBankAccount);
+		} else {
+			throw new EntityNotFoundException("User not found with id: " + bankAccount.getUser().getId());
+		}
 	}
 
 	@GetMapping("/get/{id}")
@@ -37,16 +43,10 @@ public class AccountController {
 		return ResponseEntity.ok(bankAccount);
 	}
 
-	@PostMapping("/create")
-	public ResponseEntity<BankAccount> createAccount(@RequestBody BankAccount bankAccount) {
-		Optional<User> optionalUser = userService.findById(bankAccount.getUser().getId());
-		if (optionalUser.isPresent()) {
-			bankAccount.setUser(optionalUser.get());
-			BankAccount savedBankAccount = accountService.save(bankAccount);
-			return ResponseEntity.ok(savedBankAccount);
-		} else {
-			throw new EntityNotFoundException("User not found with id: " + bankAccount.getUser().getId());
-		}
+	@GetMapping("/getall")
+	public ResponseEntity<List<BankAccount>> getAllAccounts() {
+		List<BankAccount> bankAccounts = accountService.findAll();
+		return ResponseEntity.ok(bankAccounts);
 	}
 
 	@PutMapping("/update/{id}")
@@ -58,6 +58,7 @@ public class AccountController {
 		BankAccount updatedBankAccount = accountService.save(existingBankAccount);
 		return ResponseEntity.ok(updatedBankAccount);
 	}
+
 
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
