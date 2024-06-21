@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { AppBar, Toolbar, MenuItem, Typography, Button, Box } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { AppBar, Toolbar, MenuItem, Button, Box } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import DropdownSendMoney from '../../assets/DropdownSendMoney';
 import DropdownView from '../../assets/DropdownVeiw';
@@ -25,9 +24,7 @@ export default function Header() {
         <MenuItem onClick={handleClose}>Platební karty</MenuItem>
         <MenuItem onClick={handleClose}>Šablony</MenuItem>
         <Box sx={{ flexGrow: 1 }} />
-
         Informace o účtě
-
         <Button color="inherit"><AccountCircle /></Button>
       </Toolbar>
     </AppBar>

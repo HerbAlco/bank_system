@@ -3,9 +3,11 @@ package com.bank.banksystem.controller;
 import com.bank.banksystem.controller.transRequest.DepositWithdrawRequest;
 import com.bank.banksystem.controller.transRequest.TransferRequest;
 import com.bank.banksystem.entity.bank_account_entity.BankAccount;
+import com.bank.banksystem.entity.transaction_entity.TransType;
 import com.bank.banksystem.entity.transaction_entity.Transaction;
 import com.bank.banksystem.entity.user_entity.User;
 import com.bank.banksystem.service.AccountService;
+import com.bank.banksystem.service.TransactionService;
 import com.bank.banksystem.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,7 @@ public class AccountController {
 
 	private final AccountService accountService;
 	private final UserService userService;
+	private final TransactionService transactionService;
 
 	@GetMapping("/getall")
 	public ResponseEntity<List<BankAccount>> getAllAccounts() {
@@ -68,12 +71,18 @@ public class AccountController {
 	@PostMapping("/deposit")
 	public ResponseEntity<String> deposit(@RequestBody DepositWithdrawRequest request) {
 		accountService.deposit(request.getId(), request.getAmount());
+		BankAccount account = accountService.findById(request.getId())
+			.orElseThrow(() -> new EntityNotFoundException("BankAccount not found with id: " + request.getId()));
+		transactionService.createTransaction(account, request.getAmount(), TransType.DEPOSIT);
 		return ResponseEntity.ok("Deposit successful.");
 	}
 
 	@PostMapping("/withdraw")
 	public ResponseEntity<String> withdraw(@RequestBody DepositWithdrawRequest request) {
 		accountService.withdraw(request.getId(), request.getAmount());
+		BankAccount account = accountService.findById(request.getId())
+			.orElseThrow(() -> new EntityNotFoundException("BankAccount not found with id: " + request.getId()));
+		Transaction newTransaction = transactionService.createTransaction(account, request.getAmount(), TransType.WITHDRAW);
 		return ResponseEntity.ok("Withdrawal successful.");
 	}
 
@@ -85,9 +94,7 @@ public class AccountController {
 
 	@GetMapping("/transactions/{id}")
 	public ResponseEntity<List<Transaction>> getTransactionsForAccount(@PathVariable Long id) {
-		BankAccount bankAccount = accountService.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException("Bank account not found with id: " + id));
-		List<Transaction> transactions = bankAccount.getTransactions();
+		List<Transaction> transactions = accountService.getAllTransactions(id);
 		return ResponseEntity.ok(transactions);
 	}
 }

@@ -1,6 +1,7 @@
 package com.bank.banksystem.entity.user_entity;
 
 import com.bank.banksystem.entity.address_entity.Address;
+import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,6 +37,8 @@ public class User implements UserDetails {
 	private String phoneNumber;
 	@Enumerated(EnumType.STRING)
 	private Role role;
+	@OneToMany
+	private List<BankAccount> accounts;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

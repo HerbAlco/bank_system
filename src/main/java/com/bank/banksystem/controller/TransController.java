@@ -1,9 +1,10 @@
 package com.bank.banksystem.controller;
 
+import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.entity.transaction_entity.Transaction;
 import com.bank.banksystem.service.TransactionService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RequestMapping("/api/v1/auth/trans")
 @CrossOrigin(origins = "http://localhost:3000")
 public class TransController {
@@ -53,10 +54,9 @@ public class TransController {
 		return transaction.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
-	@GetMapping("/getall")
-	public ResponseEntity<List<Transaction>> getAllTransactions() {
-		List<Transaction> transactions = transactionService.findAll();
-		return ResponseEntity.ok(transactions);
+	@GetMapping("/getallbyuserid")
+	public ResponseEntity<List<Transaction>> getAllTransactions(BankAccount account) {
+		return ResponseEntity.ok(transactionService.findAll());
 	}
 
 	@PutMapping("/update/{id}")

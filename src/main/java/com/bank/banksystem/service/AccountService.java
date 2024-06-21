@@ -1,6 +1,7 @@
 package com.bank.banksystem.service;
 
 import com.bank.banksystem.entity.bank_account_entity.BankAccount;
+import com.bank.banksystem.entity.transaction_entity.Transaction;
 import com.bank.banksystem.exceptions.InsufficientFundsException;
 import com.bank.banksystem.repository.AccountRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class AccountService extends GenericService<BankAccount, Long> {
@@ -54,5 +56,15 @@ public class AccountService extends GenericService<BankAccount, Long> {
 		BigDecimal newToAccountBalance = toAccountBalance.add(amount);
 		toBankAccount.setBalance(newToAccountBalance);
 		repository.save(toBankAccount);
+	}
+
+	@Transactional(readOnly = true)
+	public List<Transaction> getAllTransactions(Long accountId) {
+		// Získání bankovního účtu podle zadaného identifikátoru
+		BankAccount bankAccount = repository.findById(accountId)
+			.orElseThrow(() -> new EntityNotFoundException("Bank account not found with id: " + accountId));
+
+		// Vrácení seznamu transakcí pro nalezený bankovní účet
+		return bankAccount.getTransactions();
 	}
 }

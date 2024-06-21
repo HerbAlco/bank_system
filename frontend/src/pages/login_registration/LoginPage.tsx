@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { LockOutlined } from "@mui/icons-material";
 import {
   Container,
@@ -19,7 +19,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  
+
   const handleLogin = async () => {
     try {
       const response = await axios.post("http://localhost:8080/api/v1/auth/authenticate", {
