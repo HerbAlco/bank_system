@@ -4,6 +4,7 @@ import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.entity.transaction_entity.Transaction;
 import com.bank.banksystem.exceptions.InsufficientFundsException;
 import com.bank.banksystem.repository.AccountRepository;
+import com.bank.banksystem.service.implService.GenericService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +13,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Service
-public class AccountService extends GenericService<BankAccount, Long> {
+public class AccountService extends GenericService<BankAccount, Long>
+{
 
 	public AccountService(AccountRepository repository) {
 		super(repository);

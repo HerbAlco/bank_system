@@ -25,14 +25,14 @@ public class UserController {
 
 	@PostMapping("/add")
 	public ResponseEntity<User> addUser(@RequestBody User user) {
-		User savedUser = userService.save(user);
+		//TODO: vytvoření accountu pro usera pri registraci nového usera
+//		User savedUser = userService.save(user);
+//		BankAccount newBankAccount = new BankAccount();
+//		newBankAccount.setUser(savedUser);
+//		newBankAccount.setBalance(BigDecimal.valueOf(100));
+//		accountService.save(newBankAccount);
 
-		BankAccount newBankAccount = new BankAccount();
-		newBankAccount.setUser(savedUser);
-		newBankAccount.setBalance(BigDecimal.valueOf(100));
-		accountService.save(newBankAccount);
-
-		return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+		return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
 	}
 
 	@GetMapping("/allusers")
@@ -49,14 +49,45 @@ public class UserController {
 
 	@PutMapping("/update/{id}")
 	public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-		Optional<User> existingUser = userService.findById(id);
-		if (existingUser.isPresent()) {
-			userService.save(updatedUser);
-			return ResponseEntity.ok(updatedUser);
+		Optional<User> existingUserOptional = userService.findById(id);
+		if (existingUserOptional.isPresent()) {
+			User existingUser = existingUserOptional.get();
+
+			if (updatedUser.getFirstName() != null) {
+				existingUser.setFirstName(updatedUser.getFirstName());
+			}
+			if (updatedUser.getLastName() != null) {
+				existingUser.setLastName(updatedUser.getLastName());
+			}
+			if (updatedUser.getEmail() != null) {
+				existingUser.setEmail(updatedUser.getEmail());
+			}
+			if (updatedUser.getUsername() != null) {
+				existingUser.setUsername(updatedUser.getUsername());
+			}
+			if (updatedUser.getPassword() != null) {
+				existingUser.setPassword(updatedUser.getPassword());
+			}
+			if (updatedUser.getBirthDate() != null) {
+				existingUser.setBirthDate(updatedUser.getBirthDate());
+			}
+			if (updatedUser.getAddress() != null) {
+				existingUser.setAddress(updatedUser.getAddress());
+			}
+			if (updatedUser.getPhoneNumber() != null) {
+				existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
+			}
+			if (updatedUser.getRole() != null) {
+				existingUser.setRole(updatedUser.getRole());
+			}
+
+			userService.save(existingUser);
+			return ResponseEntity.ok(existingUser);
 		} else {
 			return ResponseEntity.notFound().build();
 		}
 	}
+
 
 	@DeleteMapping("/delete/{id}")
 	@Transactional

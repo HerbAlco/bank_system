@@ -1,4 +1,4 @@
-package com.bank.banksystem.service;
+package com.bank.banksystem.service.implService;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
