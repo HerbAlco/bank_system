@@ -5,7 +5,6 @@ import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.entity.transaction_entity.Transaction;
 import com.bank.banksystem.entity.user_entity.User;
 import com.bank.banksystem.service.AccountService;
-import com.bank.banksystem.service.TransactionService;
 import com.bank.banksystem.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;

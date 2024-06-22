@@ -1,5 +1,5 @@
 export interface Column {
-    id: 'transaction_id' | 'datum' | 'amount' | 'accountNumber' | 'symbol' | 'description' | 'typeTransaction';
+    id: keyof Data;
     label: string;
     minWidth?: number;
     align?: 'right';

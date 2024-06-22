@@ -10,6 +10,14 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { columns } from '../../assets/ColumnTransTable';
 import { Data } from '../../assets/types';
+import { format, parseISO } from 'date-fns';
+
+
+const formatDate = (value: string | Date) => {
+  const parsedDate = typeof value === 'string' ? parseISO(value) : value;
+  return format(parsedDate, 'dd.MM.yyyy HH:mm');
+};
+
 
 export default function TablePaymentInfo() {
   const [rows, setRows] = useState<Data[]>([]);
@@ -64,22 +72,15 @@ export default function TablePaymentInfo() {
           <TableBody>
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.transaction_id}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+              .map((row, rowIndex) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                  {columns.map((column) => (
+                    <TableCell key={column.id} align={column.align}>
+                      {column.id === 'datum' ? formatDate(row.datum) : row[column.id]}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
