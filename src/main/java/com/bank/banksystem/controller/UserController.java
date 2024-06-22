@@ -1,6 +1,5 @@
 package com.bank.banksystem.controller;
 
-import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.entity.user_entity.User;
 import com.bank.banksystem.service.AccountService;
 import com.bank.banksystem.service.UserService;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,15 +39,15 @@ public class UserController {
 		return ResponseEntity.ok(users);
 	}
 
-	@GetMapping("/getuser/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable Long id) {
-		Optional<User> user = userService.findById(id);
+	@GetMapping("/getuser/{userId}")
+	public ResponseEntity<User> getUserById(@PathVariable Long userId) {
+		Optional<User> user = userService.findById(userId);
 		return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
-	@PutMapping("/update/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-		Optional<User> existingUserOptional = userService.findById(id);
+	@PutMapping("/update/{userId}")
+	public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User updatedUser) {
+		Optional<User> existingUserOptional = userService.findById(userId);
 		if (existingUserOptional.isPresent()) {
 			User existingUser = existingUserOptional.get();
 
@@ -89,15 +87,15 @@ public class UserController {
 	}
 
 
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/delete/{userId}")
 	@Transactional
-	public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-		Optional<User> user = userService.findById(id);
+	public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
+		Optional<User> user = userService.findById(userId);
 		if (user.isPresent()) {
-			userService.deleteById(id);
-			return ResponseEntity.ok("User with ID " + id + " has been successfully deleted.");
+			userService.deleteById(userId);
+			return ResponseEntity.ok("User with ID " + userId + " has been successfully deleted.");
 		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with ID " + id + " not found.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with ID " + userId + " not found.");
 		}
 	}
 }

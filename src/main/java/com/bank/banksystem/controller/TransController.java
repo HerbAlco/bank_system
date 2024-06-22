@@ -26,53 +26,31 @@ public class TransController {
 
 	private final TransactionService transactionService;
 
-	@PostMapping("/create")
-	public ResponseEntity<?> createTransaction(@Valid @RequestBody Transaction transaction, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			List<String> errorMessages = bindingResult.getAllErrors().stream()
-				.map(DefaultMessageSourceResolvable::getDefaultMessage)
-				.collect(Collectors.toList());
-			return ResponseEntity.badRequest().body(errorMessages);
-		}
-
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication == null || !authentication.isAuthenticated()) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authorized to create transactions.");
-		}
-
-		try {
-			Transaction savedTransaction = transactionService.save(transaction);
-			return ResponseEntity.status(HttpStatus.CREATED).body(savedTransaction);
-		} catch (DataAccessException e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while saving the transaction.");
-		}
-	}
-
 	@GetMapping("/get/{id}")
 	public ResponseEntity<?> getTransactionById(@PathVariable Long id) {
 		Optional<Transaction> transaction = transactionService.findById(id);
 		return transaction.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
-	@GetMapping("/getallbyuserid")
-	public ResponseEntity<List<Transaction>> getAllTransactions(BankAccount account) {
+	@GetMapping("/getall")
+	public ResponseEntity<List<Transaction>> getAllTransactions() {
 		return ResponseEntity.ok(transactionService.findAll());
 	}
 
-	@PutMapping("/update/{id}")
-	public ResponseEntity<?> updateTransaction(@PathVariable Long id, @RequestBody Transaction transaction) {
-		transaction.setId(id);
-		Transaction updatedTransaction = transactionService.save(transaction);
-		return ResponseEntity.ok(updatedTransaction);
-	}
+//	@PutMapping("/update/{id}")
+//	public ResponseEntity<?> updateTransaction(@PathVariable Long id, @RequestBody Transaction transaction) {
+//		transaction.setId(id);
+//		Transaction updatedTransaction = transactionService.save(transaction);
+//		return ResponseEntity.ok(updatedTransaction);
+//	}
 
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
-		if (transactionService.findById(id).isPresent()) {
-			transactionService.deleteById(id);
-			return ResponseEntity.noContent().build();
-		} else {
-			return ResponseEntity.notFound().build();
-		}
-	}
+//	@DeleteMapping("/delete/{id}")
+//	public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
+//		if (transactionService.findById(id).isPresent()) {
+//			transactionService.deleteById(id);
+//			return ResponseEntity.noContent().build();
+//		} else {
+//			return ResponseEntity.notFound().build();
+//		}
+//	}
 }

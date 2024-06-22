@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum TransType {
 
 	KART_PAYMENT("Platba kartou"),
-	PAYMENT_TRANSFER("Platba převodem"),
+	TRANSFER("Platba převodem"),
 	WITHDRAW("Výběr"),
 	DEPOSIT("Vklad");
 

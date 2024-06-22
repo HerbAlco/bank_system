@@ -1,5 +1,6 @@
 package com.bank.banksystem.controller.transRequest;
 
+import com.bank.banksystem.entity.transaction_entity.TransType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +12,18 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @Data
-public class DepositWithdrawRequest
+public class TransRequest
 {
-	private Long id;
 	private BigDecimal amount;
+
+	private Long accountId;
+
+	private Long toAccountId;
+
+	private String symbol;
+
+	private String note;
+
+	private TransType transType;
+
 }

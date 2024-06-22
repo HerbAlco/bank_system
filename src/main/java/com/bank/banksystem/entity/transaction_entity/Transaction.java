@@ -13,9 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = ("_transaction"))
-public class Transaction
-{
+@Table(name = "_transaction")
+public class Transaction {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,10 +30,19 @@ public class Transaction
 	@JoinColumn(name = "account_id", nullable = false)
 	private BankAccount account;
 
+	@ManyToOne
+	@JoinColumn(name = "to_account_id")
+	private BankAccount toAccount;
+
 	private String symbol;
 
 	private String note;
 
+	@Enumerated(EnumType.STRING)
 	private TransType transType;
-}
 
+	@PrePersist
+	protected void onCreate() {
+		this.dateTimeTrans = LocalDateTime.now();
+	}
+}
