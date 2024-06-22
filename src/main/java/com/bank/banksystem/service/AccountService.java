@@ -13,11 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-public class AccountService extends GenericService<BankAccount, Long>
-{
-
+public class AccountService extends GenericService<BankAccount, Long> {
 
 	private final TransactionService transactionService;
 
@@ -26,6 +25,22 @@ public class AccountService extends GenericService<BankAccount, Long>
 	{
 		super(repository);
 		this.transactionService = transactionService;
+	}
+
+	@Override
+	@Transactional
+	public BankAccount save(BankAccount entity) {
+		entity.setAccountNumber(generateUniqueAccountNumber());
+		return repository.save(entity);
+	}
+
+	private String generateUniqueAccountNumber() {
+		String accountNumber;
+		do {
+			accountNumber = "CZ100025" + ThreadLocalRandom.current().nextInt(10000, 100000);
+		} while (((AccountRepository) repository).existsByAccountNumber(accountNumber));
+
+		return accountNumber;
 	}
 
 	@Transactional
@@ -92,4 +107,6 @@ public class AccountService extends GenericService<BankAccount, Long>
 			.orElseThrow(() -> new EntityNotFoundException("Bank account not found with id: " + accountId));
 		return bankAccount.getTransactions();
 	}
+
+
 }

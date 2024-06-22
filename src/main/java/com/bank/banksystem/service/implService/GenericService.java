@@ -1,5 +1,6 @@
 package com.bank.banksystem.service.implService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ public class GenericService<T, ID> {
 
 	protected final JpaRepository<T, ID> repository;
 
+	@Autowired
 	public GenericService(JpaRepository<T, ID> repository) {
 		this.repository = repository;
 	}
@@ -35,5 +37,4 @@ public class GenericService<T, ID> {
 	public void deleteById(ID id) {
 		repository.deleteById(id);
 	}
-
 }

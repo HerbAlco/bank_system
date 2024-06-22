@@ -2,8 +2,8 @@ package com.bank.banksystem.service;
 
 import com.bank.banksystem.entity.transaction_entity.TransType;
 import com.bank.banksystem.entity.transaction_entity.Transaction;
+import com.bank.banksystem.repository.TransactionRepository;
 import com.bank.banksystem.service.implService.GenericService;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TransactionService extends GenericService<Transaction, Long>
 {
 
-	public TransactionService(JpaRepository<Transaction, Long> repository)
+	public TransactionService(TransactionRepository repository)
 	{
 		super(repository);
 	}

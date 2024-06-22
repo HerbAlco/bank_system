@@ -23,11 +23,10 @@ public class AccountController {
 
 	private final AccountService accountService;
 	private final UserService userService;
-	private final TransactionService transactionService;
 
-	@PostMapping("/create/{id}")
-	public ResponseEntity<BankAccount> createAccount(@PathVariable Long id, @RequestBody BankAccount bankAccount) {
-		Optional<User> optionalUser = userService.findById(id);
+	@PostMapping("/create/{userId}")
+	public ResponseEntity<BankAccount> createAccount(@PathVariable Long userId, @RequestBody BankAccount bankAccount) {
+		Optional<User> optionalUser = userService.findById(userId);
 		if (optionalUser.isPresent()) {
 			bankAccount.setUser(optionalUser.get());
 			BankAccount savedBankAccount = accountService.save(bankAccount);

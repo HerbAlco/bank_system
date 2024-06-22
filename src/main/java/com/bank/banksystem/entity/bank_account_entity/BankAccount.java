@@ -28,7 +28,7 @@ public class BankAccount {
 	private Long id;
 
 	@Column(nullable = false, unique = true)
-	private final String accountNumber = "CZ100025" + new Random().nextInt(90000) + 10000;
+	private String accountNumber;
 
 	@Column(nullable = false)
 	private BigDecimal balance;
