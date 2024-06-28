@@ -109,8 +109,8 @@ public class AccountService extends GenericService<BankAccount, Long> {
 	}
 
 
-	public List<BankAccount> getAllAccountByUserId(String username)
+	public List<BankAccount> getAllAccountByUsername(String username)
 	{
-		return repository.findAll();
+		return repository.findAll().stream().filter(account -> account.getUser().getUsername().equals(username)).toList();
 	}
 }

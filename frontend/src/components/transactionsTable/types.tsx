@@ -1,17 +1,16 @@
 export interface Column {
-    id: keyof Data;
+    id: keyof Transaction;
     label: string;
     minWidth?: number;
     align?: 'right';
     format?: (value: string | number) => string | JSX.Element;
 }
 
-export interface Data {
-    transaction_id: string;
-    datum: string;
+export interface Transaction {
+    id: number;
     amount: number;
-    accountNumber: string;
+    dateTimeTrans: string;
     symbol: string;
     description: string;
-    typeTransaction: string;
+    transType: string;
 }

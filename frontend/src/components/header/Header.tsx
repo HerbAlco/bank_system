@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { AppBar, Toolbar, MenuItem, Button, Box } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import DropdownSendMoney from '../../assets/DropdownSendMoney';
-import DropdownView from '../../assets/DropdownVeiw';
+import DropdownSendMoney from './DropdownSendMoney';
+import DropdownView from './DropdownVeiw';
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

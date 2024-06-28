@@ -126,17 +126,15 @@ public class UserController
 	}
 
 	@GetMapping("/getcurrentaccounts")
-	public ResponseEntity<List<Transaction>> getCurrentAccounts()
+	public ResponseEntity<List<BankAccount>> getCurrentAccounts()
 	{
 
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		List<BankAccount> accounts = accountService.getAllAccountByUserId(username);
+		List<BankAccount> accounts = accountService.getAllAccountByUsername(username);
 
-		List<Transaction> transactions = accounts.get(0).getTransactions();
-
-		if (transactions != null && !transactions.isEmpty())
+		if (accounts != null && !accounts.isEmpty())
 		{
-			return ResponseEntity.ok(transactions);
+			return ResponseEntity.ok(accounts);
 		}
 		else
 		{

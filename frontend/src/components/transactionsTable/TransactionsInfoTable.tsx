@@ -8,9 +8,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { columns } from '../../assets/ColumnTransTable';
-import { Data } from '../../assets/types';
 import { format, parseISO } from 'date-fns';
+import { columns } from './ColumnTransTable';
+import { Transaction } from './types'; // Importujeme nový typ Transaction
 
 const formatDate = (value: string | Date) => {
   const parsedDate = typeof value === 'string' ? parseISO(value) : value;
@@ -18,7 +18,7 @@ const formatDate = (value: string | Date) => {
 };
 
 export default function TablePaymentInfo() {
-  const [rows, setRows] = useState<Data[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -38,16 +38,14 @@ export default function TablePaymentInfo() {
           }
         });
 
-        const data = response.data.map((transaction: any) => ({
-          transaction_id: transaction.id,
-          datum: transaction.dateTimeTrans,
-          amount: transaction.amount,
-          symbol: transaction.symbol,
-          description: transaction.note,
-          typeTransaction: transaction.transType,
-        }));
+        // Zde předpokládáme, že response.data obsahuje seznam účtů s transakcemi
+        // a my chceme zobrazit transakce ze všech účtů.
+        const allTransactions = response.data.reduce((acc: Transaction[], account: any) => {
+          // Sčítáme transakce z každého účtu do jednoho pole
+          return acc.concat(account.transactions);
+        }, []);
 
-        setRows(data);
+        setTransactions(allTransactions);
       } catch (error) {
         console.error("There was an error fetching the transactions!", error);
       }
@@ -83,15 +81,16 @@ export default function TablePaymentInfo() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
+            {transactions
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, rowIndex) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  {columns.map((column) => (
-                    <TableCell key={column.id} align={column.align}>
-                      {column.id === 'datum' ? formatDate(row.datum) : row[column.id]}
-                    </TableCell>
-                  ))}
+              .map((transaction, index) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                  <TableCell>{transaction.id}</TableCell>
+                  <TableCell>{transaction.dateTimeTrans}</TableCell>
+                  <TableCell>{transaction.amount}</TableCell>
+                  <TableCell>{transaction.symbol}</TableCell>
+                  <TableCell>{transaction.description}</TableCell>
+                  <TableCell>{transaction.transType}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
@@ -100,7 +99,7 @@ export default function TablePaymentInfo() {
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={rows.length}
+        count={transactions.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
