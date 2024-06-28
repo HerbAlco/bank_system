@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = ("_user"))
+@Table(name = "_user")
 public class User implements UserDetails {
 
 	@Id
@@ -37,7 +37,8 @@ public class User implements UserDetails {
 	private String phoneNumber;
 	@Enumerated(EnumType.STRING)
 	private Role role;
-	@OneToMany
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<BankAccount> accounts;
 
 	@Override
@@ -64,5 +65,4 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
-
 }

@@ -16,14 +16,14 @@ import axios from "axios";
 
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
       const response = await axios.post("http://localhost:8080/api/v1/auth/authenticate", {
-        email,
+        username,
         password,
       });
       const token = response.data.token;
@@ -54,12 +54,12 @@ const LoginPage = () => {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
+              id="username"
+              label="Username Address"
+              name="username"
               autoFocus
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
 
             <TextField

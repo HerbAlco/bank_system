@@ -1,6 +1,7 @@
 package com.bank.banksystem.entity.transaction_entity;
 
 import com.bank.banksystem.entity.bank_account_entity.BankAccount;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,12 +27,14 @@ public class Transaction {
 	@Column(nullable = false)
 	private LocalDateTime dateTimeTrans;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "account_id", nullable = false)
+	@JsonIgnore
 	private BankAccount account;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "to_account_id")
+	@JsonIgnore
 	private BankAccount toAccount;
 
 	private String symbol;

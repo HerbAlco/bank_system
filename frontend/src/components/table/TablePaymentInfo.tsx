@@ -12,12 +12,10 @@ import { columns } from '../../assets/ColumnTransTable';
 import { Data } from '../../assets/types';
 import { format, parseISO } from 'date-fns';
 
-
 const formatDate = (value: string | Date) => {
   const parsedDate = typeof value === 'string' ? parseISO(value) : value;
   return format(parsedDate, 'dd.MM.yyyy HH:mm');
 };
-
 
 export default function TablePaymentInfo() {
   const [rows, setRows] = useState<Data[]>([]);
@@ -25,22 +23,37 @@ export default function TablePaymentInfo() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api/v1/auth/trans/getall')
-      .then((response) => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        console.error("Token is not available");
+        return;
+      }
+
+      try {
+        const response = await axios.get('http://localhost:8080/api/v1/auth/user/getcurrentaccounts', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
         const data = response.data.map((transaction: any) => ({
           transaction_id: transaction.id,
           datum: transaction.dateTimeTrans,
           amount: transaction.amount,
-          accountNumber: transaction.account.accountNumber,
           symbol: transaction.symbol,
           description: transaction.note,
           typeTransaction: transaction.transType,
         }));
+
         setRows(data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("There was an error fetching the transactions!", error);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleChangePage = (event: unknown, newPage: number) => {

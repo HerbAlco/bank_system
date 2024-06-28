@@ -2,6 +2,7 @@ package com.bank.banksystem.entity.bank_account_entity;
 
 import com.bank.banksystem.entity.transaction_entity.Transaction;
 import com.bank.banksystem.entity.user_entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,7 @@ import java.util.random.RandomGenerator;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = ("_account"))
+@Table(name = "_account")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class BankAccount {
 
@@ -36,12 +37,14 @@ public class BankAccount {
 	@Enumerated(EnumType.STRING)
 	private AccountType accountType;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
+	@JsonIgnore
 	private User user;
 
-	@OneToMany
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Transaction> transactions;
 
+	@OneToMany(mappedBy = "toAccount", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Transaction> incomingTransactions;
 }
-

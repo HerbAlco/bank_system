@@ -76,4 +76,12 @@ public class AccountController {
 		List<Transaction> transactions = accountService.getAllTransactions(id);
 		return ResponseEntity.ok(transactions);
 	}
+
+//	@GetMapping("/currentAccountTransactions/{accountId}")
+//	public ResponseEntity<List<Transaction>> getAllTransactionsForAccount(
+//		@PathVariable Long accountId) {
+//
+//		List<Transaction> transactions = accountService.getAllTransactions(accountId);
+//		return ResponseEntity.ok(transactions);
+//	}
 }
