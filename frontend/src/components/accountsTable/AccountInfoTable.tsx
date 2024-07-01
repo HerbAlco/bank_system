@@ -70,7 +70,7 @@ export default function AccountsInfoTable() {
                     </TableHead>
                     <TableBody>
                         {rows.map((row) => (
-                            <TableRow hover key={row.id}>
+                            <TableRow hover key={row.id} sx={{ '&:nth-of-type(even)': { backgroundColor: '#f2f2f2' } }}>
                                 <TableCell align="left">{row.accountNumber}</TableCell>
                                 <TableCell align="left">{row.balance}</TableCell>
                                 <TableCell align="left">{row.accountType}</TableCell>

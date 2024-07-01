@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/header/Header';
-import TransactionsInfoTable from '../../components/transactionsTable/TransactionsInfoTable';
 import AccountInfoTable from '../../components/accountsTable/AccountInfoTable';
+import TransactionsInfoTable from '../../components/transactionsTable/TransactionsInfoTable';
+
 
 const Home = () => {
   const navigate = useNavigate();
@@ -41,10 +42,13 @@ const Home = () => {
   return isAuthenticated ? (
     <div style={{ marginTop: '25px', marginLeft: '350px', marginRight: '100px' }}>
       <Header />
-      <AccountInfoTable />
+      <div style={{ marginBottom: '25px' }}>
+        <AccountInfoTable />
+      </div>
       <TransactionsInfoTable />
     </div>
   ) : null;
+
 };
 
 export default Home;
