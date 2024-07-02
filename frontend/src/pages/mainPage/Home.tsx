@@ -3,15 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import TransactionsInfoTable from '../account/transactionsTable/TransactionsInfoTable';
 import { Container } from '@mui/system';
-import AccountDetails from '../assets/AccountDetails';
 import SendPayment from './SendPayment';
 import AccountsInfoTable from '../account/accountsTable/AccountInfoTable';
+import AccountDetails from './AccountDetails';
+
+interface AccountData {
+  id: number;
+  accountNumber: string;
+  balance: number;
+  accountType: string;
+}
 
 const Home = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [selectedAccountId, setSelectedAccountId] = useState<number | null>(null);
-  const [showSendPayment, setShowSendPayment] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(null); // Changed to null
+  const [view, setView] = useState<string>('default');
+  const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -43,23 +51,31 @@ const Home = () => {
     fetchData();
   }, [navigate]);
 
+  const renderView = () => {
+    switch (view) {
+      case 'sendPayment':
+        return <SendPayment selectedAccountNumber={selectedAccount?.accountNumber} />;
+      case 'default':
+      default:
+        return (
+          <>
+            <div style={{ marginBottom: '25px' }}>
+              <AccountsInfoTable setSelectedAccount={setSelectedAccount} isInitialLoad={isInitialLoad} setIsInitialLoad={setIsInitialLoad} />
+            </div>
+            <TransactionsInfoTable selectedAccountId={selectedAccount?.id} />
+          </>
+        );
+    }
+  };
+
   return isAuthenticated ? (
     <div style={{ marginTop: '25px', display: 'flex', justifyContent: 'space-between' }}>
       <Container sx={{ flex: 1, marginRight: '20px' }}>
-        <AccountDetails selectedAccountId={selectedAccountId} />
+        <AccountDetails selectedAccountId={selectedAccount?.id} />
       </Container>
       <Container sx={{ flex: 2 }}>
-        <Header setShowSendPayment={setShowSendPayment} />
-        {showSendPayment ? (
-          <SendPayment />
-        ) : (
-          <>
-            <div style={{ marginBottom: '25px' }}>
-              <AccountsInfoTable setSelectedAccountId={setSelectedAccountId} />
-            </div>
-            <TransactionsInfoTable />
-          </>
-        )}
+        <Header setView={setView} />
+        {renderView()}
       </Container>
     </div>
   ) : null;

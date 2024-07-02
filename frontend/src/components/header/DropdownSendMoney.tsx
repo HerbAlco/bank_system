@@ -3,10 +3,10 @@ import { Button, Menu, MenuItem, Divider } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 interface DropdownSendMoneyProps {
-  setShowSendPayment: React.Dispatch<React.SetStateAction<boolean>>;
+  setView: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const DropdownSendMoney: React.FC<DropdownSendMoneyProps> = ({ setShowSendPayment }) => {
+const DropdownSendMoney: React.FC<DropdownSendMoneyProps> = ({ setView }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -19,7 +19,7 @@ const DropdownSendMoney: React.FC<DropdownSendMoneyProps> = ({ setShowSendPaymen
   };
 
   const handleTuzemskaPlatbaClick = () => {
-    setShowSendPayment(true);
+    setView('sendPayment');
     handleClose();
   };
 

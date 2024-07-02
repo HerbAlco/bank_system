@@ -16,9 +16,9 @@ public class TransRequest
 {
 	private BigDecimal amount;
 
-	private Long accountId;
+	private String accountNumber;
 
-	private Long toAccountId;
+	private String toAccountNumber;
 
 	private String symbol;
 

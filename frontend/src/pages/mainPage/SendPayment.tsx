@@ -3,18 +3,24 @@ import axios from 'axios';
 import { Container, Paper, TextField, Button, Typography, Grid } from '@mui/material';
 
 interface SendMoneyForm {
-    fromAccount: string;
-    toAccount: string;
+    accountNumber: string;
+    toAccountNumber: string;
     amount: number;
     note: string;
+    symbol: string;
 }
 
-const SendPayment: React.FC = () => {
+interface SendPaymentProps {
+    selectedAccountNumber: string | undefined;
+}
+
+const SendPayment: React.FC<SendPaymentProps> = ({ selectedAccountNumber }) => {
     const [form, setForm] = useState<SendMoneyForm>({
-        fromAccount: '',
-        toAccount: '',
+        accountNumber: selectedAccountNumber || '',
+        toAccountNumber: '',
         amount: 0,
         note: '',
+        symbol: '',
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,10 +40,15 @@ const SendPayment: React.FC = () => {
             return;
         }
 
+        const transactionData = {
+            ...form,
+            transType: 'TRANSFER'
+        };
+
         try {
             await axios.post(
-                'http://localhost:8080/api/v1/auth/user/transfer',
-                form,
+                'http://localhost:8080/api/v1/auth/account/processTransaction',
+                transactionData,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -62,18 +73,19 @@ const SendPayment: React.FC = () => {
                             <Grid item xs={12}>
                                 <TextField
                                     fullWidth
-                                    label="Z vašeho účtu"
-                                    name="fromAccount"
-                                    value={form.fromAccount}
-                                    onChange={handleChange}
+                                    label="Váš účet"
+                                    value={selectedAccountNumber || ''}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}
                                 />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
                                     fullWidth
                                     label="Na číslo účet"
-                                    name="toAccount"
-                                    value={form.toAccount}
+                                    name="toAccountNumber"
+                                    value={form.toAccountNumber}
                                     onChange={handleChange}
                                 />
                             </Grid>
@@ -97,8 +109,17 @@ const SendPayment: React.FC = () => {
                                 />
                             </Grid>
                             <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    label="Symbol"
+                                    name="symbol"
+                                    value={form.symbol}
+                                    onChange={handleChange}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
                                 <Button type="submit" variant="contained" color="primary" fullWidth>
-                                    Send
+                                    Poslat platbu
                                 </Button>
                             </Grid>
                         </Grid>

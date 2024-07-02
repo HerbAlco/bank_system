@@ -3,7 +3,9 @@ import axios from 'axios';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 interface AccountsInfoTableProps {
-    setSelectedAccountId: React.Dispatch<React.SetStateAction<number | null>>;
+    setSelectedAccount: React.Dispatch<React.SetStateAction<AccountData | null>>; // Changed to accept AccountData | null
+    isInitialLoad: boolean;
+    setIsInitialLoad: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface AccountData {
@@ -13,7 +15,13 @@ interface AccountData {
     accountType: string;
 }
 
-const AccountsInfoTable: React.FC<AccountsInfoTableProps> = ({ setSelectedAccountId }) => {
+const accountTypeTranslations: { [key: string]: string } = {
+    CHECKING: "Běžný účet",
+    SAVINGS: "Spořicí účet",
+    BUSINESS: "Podnikatelský účet",
+};
+
+const AccountsInfoTable: React.FC<AccountsInfoTableProps> = ({ setSelectedAccount, isInitialLoad, setIsInitialLoad }) => {
     const [rows, setRows] = useState<AccountData[]>([]);
 
     useEffect(() => {
@@ -36,21 +44,25 @@ const AccountsInfoTable: React.FC<AccountsInfoTableProps> = ({ setSelectedAccoun
                     id: account.id,
                     accountNumber: account.accountNumber,
                     balance: account.balance,
-                    accountType: account.accountType,
+                    accountType: accountTypeTranslations[account.accountType] || account.accountType,
                 }));
 
                 setRows(data);
+
+                if (data.length > 0 && isInitialLoad) {
+                    setSelectedAccount(data[0]);
+                    setIsInitialLoad(false);
+                }
             } catch (error) {
                 console.error("There was an error fetching the accounts!", error);
             }
         };
 
         fetchData();
-    }, []);
+    }, [setSelectedAccount, isInitialLoad, setIsInitialLoad]);
 
-    const handleRowClick = (id: number) => {
-        setSelectedAccountId(id);
-        // Optionally, you can navigate to another page or perform other actions here
+    const handleRowClick = (account: AccountData) => {
+        setSelectedAccount(account);
     };
 
     return (
@@ -66,7 +78,7 @@ const AccountsInfoTable: React.FC<AccountsInfoTableProps> = ({ setSelectedAccoun
                     </TableHead>
                     <TableBody>
                         {rows.map((row) => (
-                            <TableRow hover key={row.id} onClick={() => handleRowClick(row.id)} sx={{ '&:nth-of-type(even)': { backgroundColor: '#f2f2f2' } }}>
+                            <TableRow hover key={row.id} onClick={() => handleRowClick(row)} sx={{ '&:nth-of-type(even)': { backgroundColor: '#f2f2f2' } }}>
                                 <TableCell>{row.accountNumber}</TableCell>
                                 <TableCell>{row.balance}</TableCell>
                                 <TableCell>{row.accountType}</TableCell>

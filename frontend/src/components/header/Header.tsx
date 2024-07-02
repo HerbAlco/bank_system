@@ -1,14 +1,15 @@
-import * as React from 'react';
+import React from 'react';
 import { AppBar, Toolbar, MenuItem, Button, Box } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import DropdownSendMoney from './DropdownSendMoney';
 import DropdownView from './DropdownVeiw';
 
+
 interface HeaderProps {
-  setShowSendPayment: React.Dispatch<React.SetStateAction<boolean>>;
+  setView: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function Header({ setShowSendPayment }: HeaderProps) {
+const Header: React.FC<HeaderProps> = ({ setView }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -22,8 +23,8 @@ export default function Header({ setShowSendPayment }: HeaderProps) {
   return (
     <AppBar position="static" sx={{ mt: 10, borderRadius: '10px' }}>
       <Toolbar>
-        <MenuItem onClick={handleClose}>Nástěnka</MenuItem>
-        <DropdownSendMoney setShowSendPayment={setShowSendPayment} />
+        <MenuItem onClick={() => setView('default')}>Nástěnka</MenuItem>
+        <DropdownSendMoney setView={setView} />
         <DropdownView />
         <MenuItem onClick={handleClose}>Platební karty</MenuItem>
         <MenuItem onClick={handleClose}>Šablony</MenuItem>
@@ -34,3 +35,5 @@ export default function Header({ setShowSendPayment }: HeaderProps) {
     </AppBar>
   );
 }
+
+export default Header;

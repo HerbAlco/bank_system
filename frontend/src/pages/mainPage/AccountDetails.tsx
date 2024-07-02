@@ -2,6 +2,12 @@ import { Paper, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const accountTypeTranslations: { [key: string]: string } = {
+    CHECKING: "Běžný účet",
+    SAVINGS: "Spořicí účet",
+    BUSINESS: "Podnikatelský účet",
+};
+
 interface AccountData {
     accountNumber: string;
     balance: number;
@@ -9,14 +15,14 @@ interface AccountData {
 }
 
 interface AccountDetailsProps {
-    selectedAccountId: number | null;
+    selectedAccountId: number | undefined;
 }
 
 const AccountDetails: React.FC<AccountDetailsProps> = ({ selectedAccountId }) => {
     const [accountData, setAccountData] = useState<AccountData | null>(null);
 
     useEffect(() => {
-        if (!selectedAccountId) return;
+        if (selectedAccountId === undefined) return;
 
         const fetchAccountData = async () => {
             const token = localStorage.getItem("token");
@@ -27,7 +33,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ selectedAccountId }) =>
             }
 
             try {
-                const response = await axios.get(`http://localhost:8080/api/v1/auth/user/account/${selectedAccountId}`, {
+                const response = await axios.get(`http://localhost:8080/api/v1/auth/account/get/${selectedAccountId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -63,7 +69,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ selectedAccountId }) =>
             <div>
                 <Typography variant="body1"><b>Číslo účtu:</b> {accountData.accountNumber}</Typography>
                 <Typography variant="body1"><b>Zůstatek:</b> {accountData.balance}</Typography>
-                <Typography variant="body1"><b>Typ účtu:</b> {accountData.accountType}</Typography>
+                <Typography variant="body1"><b>Typ účtu:</b> {accountTypeTranslations[accountData.accountType] || accountData.accountType}</Typography>
             </div>
         </Paper>
     );

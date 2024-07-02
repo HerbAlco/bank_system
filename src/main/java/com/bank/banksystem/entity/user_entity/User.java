@@ -3,10 +3,7 @@ package com.bank.banksystem.entity.user_entity;
 import com.bank.banksystem.entity.address_entity.Address;
 import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,6 +36,7 @@ public class User implements UserDetails {
 	private Role role;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	@ToString.Exclude
 	private List<BankAccount> accounts;
 
 	@Override

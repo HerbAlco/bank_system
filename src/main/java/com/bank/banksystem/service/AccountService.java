@@ -46,9 +46,9 @@ public class AccountService extends GenericService<BankAccount, Long> {
 	@Transactional
 	public void processTransaction(TransRequest trans)
 	{
-		Long accountId = trans.getAccountId();
-		BankAccount fromBankAccount = repository.findById(accountId)
-			.orElseThrow(() -> new EntityNotFoundException("Bank account not found with id: " + accountId));
+		String accountNumber = trans.getAccountNumber();
+		BankAccount fromBankAccount = ((AccountRepository) repository).findByAccountNumber(accountNumber)
+			.orElseThrow(() -> new EntityNotFoundException("Bank account not found with id: " + accountNumber));
 
 		Transaction transaction = new Transaction();
 		transaction.setAccount(fromBankAccount);
@@ -61,9 +61,9 @@ public class AccountService extends GenericService<BankAccount, Long> {
 			case DEPOSIT -> handleDeposit(fromBankAccount, trans.getAmount());
 			case WITHDRAW -> handleWithdraw(fromBankAccount, trans.getAmount());
 			case TRANSFER -> {
-				Long toAccountId = trans.getToAccountId();
-				BankAccount toBankAccount = repository.findById(toAccountId)
-					.orElseThrow(() -> new EntityNotFoundException("Account not found with id: " + toAccountId));
+				String toAccountNumber = trans.getToAccountNumber();
+				BankAccount toBankAccount = ((AccountRepository)repository).findByAccountNumber(toAccountNumber)
+					.orElseThrow(() -> new EntityNotFoundException("Account not found with id: " + toAccountNumber));
 				handleTransfer(trans, fromBankAccount, toBankAccount);
 				transaction.setToAccount(toBankAccount);
 				yield fromBankAccount.getBalance().subtract(trans.getAmount());

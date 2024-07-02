@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,11 +31,13 @@ public class Transaction {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "account_id", nullable = false)
 	@JsonIgnore
+	@ToString.Exclude
 	private BankAccount account;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "to_account_id")
 	@JsonIgnore
+	@ToString.Exclude
 	private BankAccount toAccount;
 
 	private String symbol;
