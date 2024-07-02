@@ -4,7 +4,11 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import DropdownSendMoney from './DropdownSendMoney';
 import DropdownView from './DropdownVeiw';
 
-export default function Header() {
+interface HeaderProps {
+  setShowSendPayment: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function Header({ setShowSendPayment }: HeaderProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -19,7 +23,7 @@ export default function Header() {
     <AppBar position="static" sx={{ mt: 10, borderRadius: '10px' }}>
       <Toolbar>
         <MenuItem onClick={handleClose}>Nástěnka</MenuItem>
-        <DropdownSendMoney />
+        <DropdownSendMoney setShowSendPayment={setShowSendPayment} />
         <DropdownView />
         <MenuItem onClick={handleClose}>Platební karty</MenuItem>
         <MenuItem onClick={handleClose}>Šablony</MenuItem>

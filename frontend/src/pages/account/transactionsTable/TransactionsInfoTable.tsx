@@ -4,7 +4,7 @@ import { Paper } from '@mui/material';
 import { Transaction } from './types';
 import TransactionTable from './TransactionTable';
 
-export default function AccountsInfoTable() {
+export default function TransactionsInfoTable() {
   const [rows, setRows] = useState<Transaction[]>([]);
 
   useEffect(() => {
