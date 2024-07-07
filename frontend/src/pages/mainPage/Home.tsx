@@ -17,7 +17,7 @@ interface AccountData {
 const Home = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(null); // Changed to null
+  const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(null);
   const [view, setView] = useState<string>('default');
   const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
 

@@ -53,7 +53,9 @@ public class AccountController {
 		BankAccount existingBankAccount = accountService.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("Bank account not found with id: " + id));
 
-		existingBankAccount.setBalance(bankAccountDetails.getBalance());
+		if (bankAccountDetails.getName() != null)
+			existingBankAccount.setName(bankAccountDetails.getName());
+
 		BankAccount updatedBankAccount = accountService.save(existingBankAccount);
 		return ResponseEntity.ok(updatedBankAccount);
 	}

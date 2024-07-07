@@ -4,11 +4,11 @@ import com.bank.banksystem.entity.transaction_entity.Transaction;
 import com.bank.banksystem.entity.user_entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,10 +26,12 @@ public class BankAccount {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	private String name;
+
 	@Column(nullable = false, unique = true)
 	private String accountNumber;
 
-	@Column(nullable = false)
+	@DecimalMin(value = "0.0", message = "Balance cannot be negative")
 	private BigDecimal balance;
 
 	@Enumerated(EnumType.STRING)
@@ -38,14 +40,11 @@ public class BankAccount {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	@JsonIgnore
-	@ToString.Exclude
 	private User user;
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
-	@ToString.Exclude
 	private List<Transaction> transactions;
 
 	@OneToMany(mappedBy = "toAccount", cascade = CascadeType.ALL, orphanRemoval = true)
-	@ToString.Exclude
 	private List<Transaction> incomingTransactions;
 }

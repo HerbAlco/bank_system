@@ -10,6 +10,7 @@ const accountTypeTranslations: { [key: string]: string } = {
 
 interface AccountData {
     accountNumber: string;
+    name: string;
     balance: number;
     accountType: string;
 }
@@ -67,6 +68,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ selectedAccountId }) =>
                 Údaje o aktuálním účtě
             </Typography>
             <div>
+                <Typography variant="body1"><b>Název účtu:</b> {accountData.name}</Typography>
                 <Typography variant="body1"><b>Číslo účtu:</b> {accountData.accountNumber}</Typography>
                 <Typography variant="body1"><b>Zůstatek:</b> {accountData.balance}</Typography>
                 <Typography variant="body1"><b>Typ účtu:</b> {accountTypeTranslations[accountData.accountType] || accountData.accountType}</Typography>

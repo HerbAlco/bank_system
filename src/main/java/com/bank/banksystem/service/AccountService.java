@@ -29,9 +29,11 @@ public class AccountService extends GenericService<BankAccount, Long> {
 
 	@Override
 	@Transactional
-	public BankAccount save(BankAccount entity) {
-		entity.setAccountNumber(generateUniqueAccountNumber());
-		return repository.save(entity);
+	public BankAccount save(BankAccount account) {
+		if (account.getAccountNumber() == null)
+			account.setAccountNumber(generateUniqueAccountNumber());
+
+		return repository.save(account);
 	}
 
 	private String generateUniqueAccountNumber() {
