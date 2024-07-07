@@ -1,4 +1,4 @@
-package com.bank.banksystem.service.implService;
+package com.bank.banksystem.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GenericService<T, ID> {
+public abstract class AbstractService<T, ID> {
 
 	protected final JpaRepository<T, ID> repository;
 
 	@Autowired
-	public GenericService(JpaRepository<T, ID> repository) {
+	public AbstractService(JpaRepository<T, ID> repository) {
 		this.repository = repository;
 	}
 

@@ -1,22 +1,13 @@
 package com.bank.banksystem.controller;
 
-import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.entity.transaction_entity.Transaction;
-import com.bank.banksystem.service.TransactionService;
-import jakarta.validation.Valid;
+import com.bank.banksystem.service.implService.TransactionServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -24,7 +15,7 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "http://localhost:3000")
 public class TransController {
 
-	private final TransactionService transactionService;
+	private final TransactionServiceImpl transactionService;
 
 	@GetMapping("/get/{id}")
 	public ResponseEntity<?> getTransactionById(@PathVariable Long id) {

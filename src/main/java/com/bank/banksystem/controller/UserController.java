@@ -2,10 +2,9 @@ package com.bank.banksystem.controller;
 
 import com.bank.banksystem.config.JwtService;
 import com.bank.banksystem.entity.bank_account_entity.BankAccount;
-import com.bank.banksystem.entity.transaction_entity.Transaction;
 import com.bank.banksystem.entity.user_entity.User;
-import com.bank.banksystem.service.AccountService;
-import com.bank.banksystem.service.UserService;
+import com.bank.banksystem.service.implService.AccountServiceImpl;
+import com.bank.banksystem.service.implService.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +22,8 @@ import java.util.Optional;
 public class UserController
 {
 
-	private final UserService userService;
-	private final AccountService accountService;
+	private final UserServiceImpl userService;
+	private final AccountServiceImpl accountService;
 	private final JwtService jwtService;
 
 	@PostMapping("/add")

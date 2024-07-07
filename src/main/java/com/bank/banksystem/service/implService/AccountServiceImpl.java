@@ -1,11 +1,11 @@
-package com.bank.banksystem.service;
+package com.bank.banksystem.service.implService;
 
 import com.bank.banksystem.controller.transRequest.TransRequest;
 import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.entity.transaction_entity.Transaction;
 import com.bank.banksystem.exceptions.InsufficientFundsException;
 import com.bank.banksystem.repository.AccountRepository;
-import com.bank.banksystem.service.implService.GenericService;
+import com.bank.banksystem.service.AbstractService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,12 +16,13 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-public class AccountService extends GenericService<BankAccount, Long> {
+public class AccountServiceImpl extends AbstractService<BankAccount, Long>
+{
 
-	private final TransactionService transactionService;
+	private final TransactionServiceImpl transactionService;
 
 	@Autowired
-	public AccountService(AccountRepository repository, TransactionService transactionService)
+	public AccountServiceImpl(AccountRepository repository, TransactionServiceImpl transactionService)
 	{
 		super(repository);
 		this.transactionService = transactionService;
@@ -33,7 +34,7 @@ public class AccountService extends GenericService<BankAccount, Long> {
 		if (account.getAccountNumber() == null)
 			account.setAccountNumber(generateUniqueAccountNumber());
 
-		return repository.save(account);
+		return super.save(account);
 	}
 
 	private String generateUniqueAccountNumber() {
@@ -74,7 +75,7 @@ public class AccountService extends GenericService<BankAccount, Long> {
 		};
 
 		fromBankAccount.setBalance(newBalance);
-		repository.save(fromBankAccount);
+		super.save(fromBankAccount);
 
 		transactionService.save(transaction);
 	}
@@ -99,13 +100,13 @@ public class AccountService extends GenericService<BankAccount, Long> {
 			throw new InsufficientFundsException("Insufficient balance in the account to make the transfer");
 		}
 		toBankAccount.setBalance(toBankAccount.getBalance().add(amount));
-		repository.save(toBankAccount);
+		super.save(toBankAccount);
 	}
 
 	@Transactional(readOnly = true)
 	public List<Transaction> getAllTransactions(Long accountId)
 	{
-		BankAccount bankAccount = repository.findById(accountId)
+		BankAccount bankAccount = super.findById(accountId)
 			.orElseThrow(() -> new EntityNotFoundException("Bank account not found with id: " + accountId));
 		return bankAccount.getTransactions();
 	}
@@ -113,6 +114,6 @@ public class AccountService extends GenericService<BankAccount, Long> {
 
 	public List<BankAccount> getAllAccountByUsername(String username)
 	{
-		return repository.findAll().stream().filter(account -> account.getUser().getUsername().equals(username)).toList();
+		return super.findAll().stream().filter(account -> account.getUser().getUsername().equals(username)).toList();
 	}
 }

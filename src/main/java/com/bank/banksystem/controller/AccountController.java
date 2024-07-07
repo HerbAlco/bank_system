@@ -4,8 +4,8 @@ import com.bank.banksystem.controller.transRequest.TransRequest;
 import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.entity.transaction_entity.Transaction;
 import com.bank.banksystem.entity.user_entity.User;
-import com.bank.banksystem.service.AccountService;
-import com.bank.banksystem.service.UserService;
+import com.bank.banksystem.service.implService.AccountServiceImpl;
+import com.bank.banksystem.service.implService.UserServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +20,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AccountController {
 
-	private final AccountService accountService;
-	private final UserService userService;
+	private final AccountServiceImpl accountService;
+	private final UserServiceImpl userService;
 
 	@PostMapping("/create/{userId}")
 	public ResponseEntity<BankAccount> createAccount(@PathVariable Long userId, @RequestBody BankAccount bankAccount) {
