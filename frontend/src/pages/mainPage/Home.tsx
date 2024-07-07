@@ -1,54 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../components/header/Header';
-import TransactionsInfoTable from '../account/transactionsTable/TransactionsInfoTable';
 import { Container } from '@mui/system';
 import SendPayment from './SendPayment';
-import AccountsInfoTable from '../account/accountsTable/AccountInfoTable';
+import TransactionsInfoTable from '../account/transactionsTable/TransactionsInfoTable';
 import AccountDetails from './AccountDetails';
+import { useAccountContext } from '../../accountContextApi/AccountContext';
+import Header from '../../components/header/Header';
+import AccountsInfoTable from '../account/accountsTable/AccountInfoTable';
 
-interface AccountData {
-  id: number;
-  accountNumber: string;
-  balance: number;
-  accountType: string;
-}
-
-const Home = () => {
+const Home: React.FC = () => {
   const navigate = useNavigate();
+  const { selectedAccount } = useAccountContext();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(null);
   const [view, setView] = useState<string>('default');
-  const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
-      return;
+    } else {
+      setIsAuthenticated(true);
     }
-
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://localhost:8080/api/v1/auth/authResponse', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Chyba při ověřování tokenu');
-        }
-        setIsAuthenticated(true);
-
-      } catch (error) {
-        console.error('Chyba při ověřování tokenu:', error);
-        navigate("/login");
-      }
-    };
-
-    fetchData();
   }, [navigate]);
 
   const renderView = () => {
@@ -60,9 +32,9 @@ const Home = () => {
         return (
           <>
             <div style={{ marginBottom: '25px' }}>
-              <AccountsInfoTable setSelectedAccount={setSelectedAccount} isInitialLoad={isInitialLoad} setIsInitialLoad={setIsInitialLoad} />
+              <AccountsInfoTable />
             </div>
-            <TransactionsInfoTable selectedAccountId={selectedAccount?.id} />
+            <TransactionsInfoTable />
           </>
         );
     }

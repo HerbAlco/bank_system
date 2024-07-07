@@ -25,6 +25,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
             <Table sx={{ minWidth: 650 }}>
                 <TableHead>
                     <TableRow>
+                        <TableCell>ID</TableCell>
                         <TableCell>Datum</TableCell>
                         <TableCell>Částka</TableCell>
                         <TableCell>Symbol</TableCell>
@@ -35,6 +36,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
                 <TableBody>
                     {sortedTransactions.map((transaction) => (
                         <TableRow key={transaction.id} sx={{ '&:nth-of-type(even)': { backgroundColor: '#f2f2f2' } }}>
+                            <TableCell>{transaction.id}</TableCell>
                             <TableCell>{formatDate(transaction.dateTimeTrans)}</TableCell>
                             <TableCell>{transaction.amount}</TableCell>
                             <TableCell>{transaction.symbol}</TableCell>

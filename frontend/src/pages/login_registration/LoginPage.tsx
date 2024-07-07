@@ -12,13 +12,28 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-
-
+import { useAccountContext } from '../../accountContextApi/AccountContext';
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { setAccounts, setSelectedAccount } = useAccountContext();
+
+  const fetchAccountData = async (token: string) => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/v1/auth/user/getcurrentaccounts", {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      setSelectedAccount(response.data[0])
+      setAccounts(response.data);
+
+    } catch (error) {
+      console.error("Chyba při načítání účtů:", error);
+    }
+  };
 
   const handleLogin = async () => {
     try {
@@ -28,7 +43,9 @@ const LoginPage = () => {
       });
       const token = response.data.token;
       localStorage.setItem("token", token);
+      await fetchAccountData(token);
       navigate("/");
+
     } catch (error) {
       console.error("Chyba při přihlašování:", error);
     }

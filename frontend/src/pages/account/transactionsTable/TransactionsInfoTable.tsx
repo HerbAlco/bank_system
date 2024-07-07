@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Paper } from '@mui/material';
 import TransactionTable from './TransactionTable';
+import { useAccountContext } from '../../../accountContextApi/AccountContext';
+import { Transaction } from './types';
 
 export const getTransTypeDescription = (transType: string): string => {
   const transTypeMap: { [key: string]: string } = {
@@ -13,25 +15,13 @@ export const getTransTypeDescription = (transType: string): string => {
   return transTypeMap[transType] || transType;
 };
 
-interface TransactionsInfoTableProps {
-  selectedAccountId: number | undefined;
-}
-
-interface Transaction {
-  id: number;
-  dateTimeTrans: string;
-  amount: number;
-  symbol: string;
-  description: string;
-  transType: string;
-}
-
-const TransactionsInfoTable: React.FC<TransactionsInfoTableProps> = ({ selectedAccountId }) => {
+const TransactionsInfoTable: React.FC = () => {
   const [rows, setRows] = useState<Transaction[]>([]);
+  const { selectedAccount } = useAccountContext();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (selectedAccountId === undefined) {
+      if (!selectedAccount?.id) {
         setRows([]);
         return;
       }
@@ -44,7 +34,7 @@ const TransactionsInfoTable: React.FC<TransactionsInfoTableProps> = ({ selectedA
       }
 
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/auth/account/get/${selectedAccountId}`, {
+        const response = await axios.get(`http://localhost:8080/api/v1/auth/account/get/${selectedAccount.id}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -73,12 +63,12 @@ const TransactionsInfoTable: React.FC<TransactionsInfoTableProps> = ({ selectedA
         setRows(allTransactions);
 
       } catch (error) {
-        console.error("There was an error fetching the accounts!", error);
+        console.error("There was an error fetching the transactions!", error);
       }
     };
 
     fetchData();
-  }, [selectedAccountId]);
+  }, [selectedAccount]);
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden', marginBottom: 15 }}>

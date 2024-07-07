@@ -4,7 +4,6 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import DropdownSendMoney from './DropdownSendMoney';
 import DropdownView from './DropdownVeiw';
 
-
 interface HeaderProps {
   setView: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -21,7 +20,7 @@ const Header: React.FC<HeaderProps> = ({ setView }) => {
   };
 
   return (
-    <AppBar position="static" sx={{ mt: 10, borderRadius: '10px' }}>
+    <AppBar position="static" sx={{ borderRadius: '10px' }}>
       <Toolbar>
         <MenuItem onClick={() => setView('default')}>Nástěnka</MenuItem>
         <DropdownSendMoney setView={setView} />
@@ -29,8 +28,10 @@ const Header: React.FC<HeaderProps> = ({ setView }) => {
         <MenuItem onClick={handleClose}>Platební karty</MenuItem>
         <MenuItem onClick={handleClose}>Šablony</MenuItem>
         <Box sx={{ flexGrow: 1 }} />
-        Informace o účtě
-        <Button color="inherit"><AccountCircle /></Button>
+        <MenuItem onClick={handleClose}>Informace o účtě</MenuItem>
+        <Button color="inherit" onClick={handleClick}>
+          <AccountCircle />
+        </Button>
       </Toolbar>
     </AppBar>
   );
