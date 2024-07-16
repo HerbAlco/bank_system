@@ -34,7 +34,6 @@ const DropdownSendMoney: React.FC<DropdownSendMoneyProps> = ({ setView }) => {
         disableElevation
         onClick={handleClick}
         endIcon={<KeyboardArrowDownIcon />}
-        style={{ textTransform: 'lowercase' }}
       >
         Poslat peníze
       </Button>

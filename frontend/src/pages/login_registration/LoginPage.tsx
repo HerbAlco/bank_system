@@ -18,7 +18,7 @@ const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { setAccounts, setSelectedAccount } = useAccountContext();
+  const { setAccounts } = useAccountContext();
 
   const fetchAccountData = async (token: string) => {
     try {
@@ -27,7 +27,6 @@ const LoginPage = () => {
           'Authorization': `Bearer ${token}`
         }
       });
-      setSelectedAccount(response.data[0])
       setAccounts(response.data);
 
     } catch (error) {
@@ -44,7 +43,7 @@ const LoginPage = () => {
       const token = response.data.token;
       localStorage.setItem("token", token);
       await fetchAccountData(token);
-      navigate("/");
+      navigate("/home");
 
     } catch (error) {
       console.error("Chyba při přihlašování:", error);

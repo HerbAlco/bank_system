@@ -2,11 +2,11 @@ package com.bank.banksystem.entity.transaction_entity;
 
 import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,13 +31,11 @@ public class Transaction {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "account_id", nullable = false)
 	@JsonIgnore
-	@ToString.Exclude
 	private BankAccount account;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "to_account_id")
 	@JsonIgnore
-	@ToString.Exclude
 	private BankAccount toAccount;
 
 	private String symbol;
@@ -51,4 +49,15 @@ public class Transaction {
 	protected void onCreate() {
 		this.dateTimeTrans = LocalDateTime.now();
 	}
+
+	@JsonProperty("accountNumber")
+	public String getAccountNumber() {
+		return account != null ? account.getAccountNumber() : null;
+	}
+
+	@JsonProperty("toAccountNumber")
+	public String getToAccountNumber() {
+		return toAccount != null ? toAccount.getAccountNumber() : null;
+	}
+
 }

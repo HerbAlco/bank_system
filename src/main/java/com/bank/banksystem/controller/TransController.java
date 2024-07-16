@@ -28,20 +28,4 @@ public class TransController {
 		return ResponseEntity.ok(transactionService.findAll());
 	}
 
-//	@PutMapping("/update/{id}")
-//	public ResponseEntity<?> updateTransaction(@PathVariable Long id, @RequestBody Transaction transaction) {
-//		transaction.setId(id);
-//		Transaction updatedTransaction = transactionService.save(transaction);
-//		return ResponseEntity.ok(updatedTransaction);
-//	}
-
-//	@DeleteMapping("/delete/{id}")
-//	public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
-//		if (transactionService.findById(id).isPresent()) {
-//			transactionService.deleteById(id);
-//			return ResponseEntity.noContent().build();
-//		} else {
-//			return ResponseEntity.notFound().build();
-//		}
-//	}
 }

@@ -1,23 +1,41 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/mainPage/Home';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import Home from './pages/mainPage/MainPage';
 import LoginPage from './pages/login_registration/LoginPage';
 import RegistrationPage from './pages/login_registration/RegistrationPage';
-import Navbar from './components/navbar/Navbar';
+import Navbar from './components/navbar/Header';
 import { AccountProvider } from './accountContextApi/AccountContext';
 
 const App = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  return (
+    <AccountProvider>
+      <Navbar />
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegistrationPage />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </AccountProvider>
+  );
+};
+
+const AppWrapper = () => {
   return (
     <Router>
-      <AccountProvider>
-        <Navbar />
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegistrationPage />} />
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </AccountProvider>
+      <App />
     </Router>
   );
-}
+};
 
-export default App;
+export default AppWrapper;

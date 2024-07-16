@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 
 export interface AccountData {
     id: number;
@@ -30,7 +30,18 @@ interface AccountProviderProps {
 
 export const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
     const [accounts, setAccounts] = useState<AccountData[]>([]);
-    const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(null);
+    const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(() => {
+        const storedAccount = localStorage.getItem('selectedAccount');
+        return storedAccount ? JSON.parse(storedAccount) : null;
+    });
+
+    useEffect(() => {
+        if (selectedAccount) {
+            localStorage.setItem('selectedAccount', JSON.stringify(selectedAccount));
+        } else {
+            localStorage.removeItem('selectedAccount');
+        }
+    }, [selectedAccount]);
 
     return (
         <AccountContext.Provider value={{ accounts, selectedAccount, setSelectedAccount, setAccounts }}>

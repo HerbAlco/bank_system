@@ -83,7 +83,7 @@ const SendPayment: React.FC<SendPaymentProps> = ({ selectedAccountNumber }) => {
                             <Grid item xs={12}>
                                 <TextField
                                     fullWidth
-                                    label="Na číslo účet"
+                                    label="Na číslo účtu"
                                     name="toAccountNumber"
                                     value={form.toAccountNumber}
                                     onChange={handleChange}
