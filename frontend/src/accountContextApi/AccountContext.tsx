@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, ReactNode } from 'react';
+import { Transaction } from '../pages/mainPage/transactionsTable/types';
 
 export interface AccountData {
     id: number;
@@ -6,6 +7,8 @@ export interface AccountData {
     accountNumber: string;
     balance: number;
     accountType: string;
+    transactions: Transaction[];
+    incomingTransactions: Transaction[];
 }
 
 interface AccountContextType {

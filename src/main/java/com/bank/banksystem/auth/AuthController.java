@@ -29,6 +29,6 @@ public class AuthController {
 
 	@GetMapping("/authResponse")
 	public ResponseEntity<String> responseOk(){
-		return ResponseEntity.ok("Request ok");
+		return ResponseEntity.ok("Token is authorized");
 	}
 }

@@ -41,9 +41,9 @@ const LoginPage = () => {
         password,
       });
       const token = response.data.token;
-      localStorage.setItem("token", token);
+      localStorage.setItem('token', token);
       await fetchAccountData(token);
-      navigate("/home");
+      navigate('/home');
 
     } catch (error) {
       console.error("Chyba při přihlašování:", error);

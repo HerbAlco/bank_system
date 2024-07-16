@@ -3,8 +3,9 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-route
 import Home from './pages/mainPage/MainPage';
 import LoginPage from './pages/login_registration/LoginPage';
 import RegistrationPage from './pages/login_registration/RegistrationPage';
-import Navbar from './components/navbar/Header';
 import { AccountProvider } from './accountContextApi/AccountContext';
+import Header from './components/header/Header';
+import axios from 'axios';
 
 const App = () => {
   const navigate = useNavigate();
@@ -14,12 +15,24 @@ const App = () => {
 
     if (!token) {
       navigate("/login");
+      return;
     }
+
+    axios.get("http://localhost:8080/api/v1/auth/authResponse", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(response => {
+      })
+      .catch(error => {
+        navigate("/login");
+      });
   }, [navigate]);
 
   return (
     <AccountProvider>
-      <Navbar />
+      <Header />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegistrationPage />} />
