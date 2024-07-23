@@ -19,7 +19,6 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtService jwtService;

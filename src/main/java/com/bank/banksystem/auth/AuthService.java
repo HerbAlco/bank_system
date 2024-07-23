@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Service
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class AuthService {
 
 	private final UserRepository repository;

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @Builder
 @NoArgsConstructor
 @Data
-@CrossOrigin(origins = "http://localhost:3000")
 public class AuthResponse {
 
 	private String token;

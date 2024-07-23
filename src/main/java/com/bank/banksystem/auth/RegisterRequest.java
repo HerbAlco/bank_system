@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class RegisterRequest {
 
 	private String firstname;

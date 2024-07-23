@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { format, isValid, parseISO } from 'date-fns';
 import { cs } from 'date-fns/locale';
 import { Transaction } from './types';
-import { useAccountContext } from '../../../accountContextApi/AccountContext';
+import { useAccountContext } from '../../../../accountContextApi/AccountContext';
 
 interface TransactionsTableProps {
     transactions: Transaction[];
@@ -50,20 +50,18 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
             <Table sx={{ minWidth: 650 }}>
                 <TableHead>
                     <TableRow>
-                        <TableCell>ID</TableCell>
-                        <TableCell>Datum</TableCell>
-                        <TableCell>Částka</TableCell>
-                        <TableCell>Zdrojový účet</TableCell>
-                        <TableCell>Protiúčet</TableCell>
-                        <TableCell>Symbol</TableCell>
-                        <TableCell>Popis</TableCell>
-                        <TableCell>Typ transakce</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}>Datum</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}>Částka</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}>Zdrojový účet</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}>Protiúčet</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}>Symbol</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}>Popis</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}>Typ transakce</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {sortedTransactions.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((transaction, index) => (
                         <TableRow key={`${transaction.id}-${index}`} hover>
-                            <TableCell>{transaction.id}</TableCell>
                             <TableCell>{formatDate(transaction.dateTimeTrans)}</TableCell>
                             <TableCell
                                 style={{

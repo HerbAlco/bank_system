@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Configuration
 @AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 public class ApplicationConfig {
 
 	private final UserRepository repository;

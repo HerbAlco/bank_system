@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext, ReactNode } from 'react';
-import { Transaction } from '../pages/mainPage/transactionsTable/types';
+import { Transaction } from '../pages/mainPage/components/transactionsTable/types';
 
 export interface AccountData {
     id: number;

@@ -1,5 +1,7 @@
 package com.bank.banksystem.service;
 
+import com.bank.banksystem.entity.user_entity.User;
+import com.bank.banksystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -37,4 +39,5 @@ public abstract class AbstractService<T, ID> {
 	public void deleteById(ID id) {
 		repository.deleteById(id);
 	}
+
 }

@@ -27,7 +27,7 @@ const Navbar: React.FC<NavbarProps> = ({ setView }) => {
         <Toolbar>
           <MenuItem onClick={() => setView('default')}>Nástěnka</MenuItem>
           <DropdownSendMoney setView={setView} />
-          <DropdownView />
+          <DropdownView setView={setView} />
           <MenuItem onClick={handleClose}>Platební karty</MenuItem>
           <MenuItem onClick={handleClose}>Šablony</MenuItem>
           <Box sx={{ flexGrow: 1 }} />

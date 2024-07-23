@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Container, Paper, TextField, Button, Typography, Grid } from '@mui/material';
+import { useAccountContext } from '../../../accountContextApi/AccountContext';
 
 interface SendMoneyForm {
     accountNumber: string;
@@ -10,13 +11,12 @@ interface SendMoneyForm {
     symbol: string;
 }
 
-interface SendPaymentProps {
-    selectedAccountNumber: string | undefined;
-}
 
-const SendPayment: React.FC<SendPaymentProps> = ({ selectedAccountNumber }) => {
+const SendPayment: React.FC = ({ }) => {
+    const { selectedAccount } = useAccountContext();
+
     const [form, setForm] = useState<SendMoneyForm>({
-        accountNumber: selectedAccountNumber || '',
+        accountNumber: selectedAccount?.accountNumber || '',
         toAccountNumber: '',
         amount: 0,
         note: '',
@@ -74,7 +74,7 @@ const SendPayment: React.FC<SendPaymentProps> = ({ selectedAccountNumber }) => {
                                 <TextField
                                     fullWidth
                                     label="Váš účet"
-                                    value={selectedAccountNumber || ''}
+                                    value={selectedAccount?.accountNumber || ''}
                                     InputProps={{
                                         readOnly: true,
                                     }}

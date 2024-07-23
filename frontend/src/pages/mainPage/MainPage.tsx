@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container } from '@mui/system';
-import SendPayment from './SendPayment';
-import { useAccountContext } from '../../accountContextApi/AccountContext';
+import SendPayment from './components/SendPayment';
 import Header from '../../components/navbar/Navbar';
-import AccountsInfoTable from './accountsTable/AccountInfoTable';
-import TransactionsInfoTable from './transactionsTable/TransactionsInfoTable';
+import AccountsInfoTable from './components/AccountInfoTable';
+import TransactionsInfoTable from './components/transactionsTable/TransactionsInfoTable';
+import CreateAccount from './components/CreateAccount'
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const { selectedAccount } = useAccountContext();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [view, setView] = useState<string>('default');
 
@@ -24,8 +23,10 @@ const Home: React.FC = () => {
 
   const renderView = () => {
     switch (view) {
+      case 'createAccount':
+        return <CreateAccount />;
       case 'sendPayment':
-        return <SendPayment selectedAccountNumber={selectedAccount?.accountNumber} />;
+        return <SendPayment />;
       case 'default':
       default:
         return (

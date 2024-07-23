@@ -5,12 +5,23 @@ import com.bank.banksystem.repository.UserRepository;
 import com.bank.banksystem.service.AbstractService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl extends AbstractService<User, Long>
 {
 
-	public UserServiceImpl(UserRepository repository)
+	private final UserRepository userRepository;
+
+	public UserServiceImpl(UserRepository repository, UserRepository userRepository)
 	{
 		super(repository);
+		this.userRepository = userRepository;
 	}
+
+	public Optional<User> getUserByEmail(String email)
+	{
+		return userRepository.findByUsername(email);
+	}
+
 }

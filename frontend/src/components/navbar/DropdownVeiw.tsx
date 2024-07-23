@@ -3,12 +3,16 @@ import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 import Divider from '@mui/material/Divider';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+
+interface DropdownSendMoneyProps {
+  setView: React.Dispatch<React.SetStateAction<string>>;
+}
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -51,14 +55,21 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
-export default function DropdownView() {
+const DropdownView: React.FC<DropdownSendMoneyProps> = ({ setView }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleTuzemskaPlatbaClick = () => {
+    setView('createAccount');
+    handleClose();
   };
 
   return (
@@ -84,13 +95,13 @@ export default function DropdownView() {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose} disableRipple>
-          <EditIcon />
-          Edit
+        <MenuItem onClick={handleTuzemskaPlatbaClick} disableRipple>
+          <AddIcon />
+          Nový účet
         </MenuItem>
         <MenuItem onClick={handleClose} disableRipple>
           <FileCopyIcon />
-          Duplicate
+          Edit
         </MenuItem>
         <Divider sx={{ my: 0.5 }} />
         <MenuItem onClick={handleClose} disableRipple>
@@ -104,4 +115,6 @@ export default function DropdownView() {
       </StyledMenu>
     </div>
   );
-}
+};
+
+export default DropdownView;

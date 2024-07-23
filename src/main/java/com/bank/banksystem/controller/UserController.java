@@ -17,7 +17,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/auth/user")
-@CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
 public class UserController
 {

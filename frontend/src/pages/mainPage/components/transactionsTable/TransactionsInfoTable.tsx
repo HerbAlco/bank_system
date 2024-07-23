@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Paper } from '@mui/material';
 import TransactionTable from './TransactionTable';
-import { useAccountContext } from '../../../accountContextApi/AccountContext';
 import { Transaction } from './types';
+import { useAccountContext } from '../../../../accountContextApi/AccountContext';
+
 
 export const getTransTypeDescription = (transType: string): string => {
   const transTypeMap: { [key: string]: string } = {

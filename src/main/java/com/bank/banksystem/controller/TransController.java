@@ -12,7 +12,6 @@ import java.util.Optional;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/auth/trans")
-@CrossOrigin(origins = "http://localhost:3000")
 public class TransController {
 
 	private final TransactionServiceImpl transactionService;

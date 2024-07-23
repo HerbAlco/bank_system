@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-@CrossOrigin(origins = "http://localhost:3000")
 public class JwtService {
 
 	private static final String SECRETE_KEY = "C8SasEK+DTsxuc5YtxgJzphGF2I5AzmWc2MdRMSruEZUF9kF5DvsNa1ppKTXUrXPxCrq9Ad+l39dWwN/NM1SptC/RkMUbXpziBT6SXWlzbw=";
