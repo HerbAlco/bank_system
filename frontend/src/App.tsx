@@ -8,6 +8,10 @@ import LoginPage from './pages/login_registration/LoginPage';
 import RegistrationPage from './pages/login_registration/RegistrationPage';
 import Home from './pages/mainPage/MainPage';
 import ProtectedRoute from './ProtectedRoute';
+import Navbar from './components/navbar/Navbar';
+import CreateAccount from './pages/mainPage/components/CreateAccount';
+import AccountsInfoTable from './pages/mainPage/components/AccountInfoTable';
+import SendPayment from './pages/mainPage/components/SendPayment';
 
 const App = () => {
   const navigate = useNavigate();
@@ -43,8 +47,11 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegistrationPage />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/home" element={<Home />} />
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />}>
+            <Route path="createAccount" element={<CreateAccount />} />
+            <Route path="accountInfo" element={<AccountsInfoTable />} />
+            <Route path="payment" element={<SendPayment />} />
+          </Route>
         </Route>
       </Routes>
     </AccountProvider>

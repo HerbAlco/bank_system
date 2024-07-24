@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { Container } from '@mui/system';
 import SendPayment from './components/SendPayment';
-import Header from '../../components/navbar/Navbar';
 import AccountsInfoTable from './components/AccountInfoTable';
 import TransactionsInfoTable from './components/transactionsTable/TransactionsInfoTable';
 import CreateAccount from './components/CreateAccount'
+import Navbar from '../../components/navbar/Navbar';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -21,30 +21,11 @@ const Home: React.FC = () => {
     }
   }, [navigate]);
 
-  const renderView = () => {
-    switch (view) {
-      case 'createAccount':
-        return <CreateAccount />;
-      case 'sendPayment':
-        return <SendPayment />;
-      case 'default':
-      default:
-        return (
-          <>
-            <div style={{ marginBottom: '25px' }}>
-              <AccountsInfoTable />
-            </div>
-            <TransactionsInfoTable />
-          </>
-        );
-    }
-  };
-
   return isAuthenticated ? (
     <div >
       <Container sx={{ flex: 2 }}>
-        <Header setView={setView} />
-        {renderView()}
+        <Navbar />
+        <Outlet />
       </Container>
     </div>
   ) : null;

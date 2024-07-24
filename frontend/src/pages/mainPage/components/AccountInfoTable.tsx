@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { AccountData, useAccountContext } from '../../../accountContextApi/AccountContext';
 import axios from 'axios';
+import TransactionsInfoTable from './transactionsTable/TransactionsInfoTable';
 
 const accountTypeTranslations: { [key: string]: string } = {
     CHECKING: "Běžný účet",
@@ -50,62 +51,66 @@ const AccountsInfoTable: React.FC = () => {
     }, []);
 
     return (
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <TableContainer sx={{ maxHeight: 600, position: 'relative' }}>
-                <Box
-                    sx={{
-                        padding: 2,
-                        backgroundColor: '#f0f0f0',
-                        borderBottom: '1px solid #ccc',
-                        width: '100%',
-                        fontWeight: 'bold'
-                    }}
-                >
-                    Zůstatky na účtech:
-                </Box>
-                <Table stickyHeader aria-label="sticky table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Číslo účtu</TableCell>
-                            <TableCell>Zůstatek</TableCell>
-                            <TableCell>Typ účtu</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {isLoading ? (
+        <><div style={{ marginBottom: '25px' }}>
+            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                <TableContainer sx={{ maxHeight: 600, position: 'relative' }}>
+                    <Box
+                        sx={{
+                            padding: 2,
+                            backgroundColor: '#f0f0f0',
+                            borderBottom: '1px solid #ccc',
+                            width: '100%',
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        Zůstatky na účtech:
+                    </Box>
+                    <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
                             <TableRow>
-                                <TableCell colSpan={3}>Načítám účty...</TableCell>
+                                <TableCell>Číslo účtu</TableCell>
+                                <TableCell>Zůstatek</TableCell>
+                                <TableCell>Typ účtu</TableCell>
                             </TableRow>
-                        ) : error ? (
-                            <TableRow>
-                                <TableCell colSpan={3}>Chyba: {error}</TableCell>
-                            </TableRow>
-                        ) : (
-                            accounts.map((account) => (
-                                <TableRow
-                                    key={account.id}
-                                    hover
-                                    onClick={() => handleRowClick(account)}
-                                    selected={selectedAccount?.id === account.id}
-                                >
-                                    <TableCell>{account.accountNumber}</TableCell>
-                                    <TableCell
-                                        style={{
-                                            fontWeight: 'bold'
-                                        }}
-                                    >
-                                        {account.balance}
-                                    </TableCell>
-                                    <TableCell>
-                                        {accountTypeTranslations[account.accountType] || account.accountType}
-                                    </TableCell>
+                        </TableHead>
+                        <TableBody>
+                            {isLoading ? (
+                                <TableRow>
+                                    <TableCell colSpan={3}>Načítám účty...</TableCell>
                                 </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Paper>
+                            ) : error ? (
+                                <TableRow>
+                                    <TableCell colSpan={3}>Chyba: {error}</TableCell>
+                                </TableRow>
+                            ) : (
+                                accounts.map((account) => (
+                                    <TableRow
+                                        key={account.id}
+                                        hover
+                                        onClick={() => handleRowClick(account)}
+                                        selected={selectedAccount?.id === account.id}
+                                    >
+                                        <TableCell>{account.accountNumber}</TableCell>
+                                        <TableCell
+                                            style={{
+                                                fontWeight: 'bold'
+                                            }}
+                                        >
+                                            {account.balance}
+                                        </TableCell>
+                                        <TableCell>
+                                            {accountTypeTranslations[account.accountType] || account.accountType}
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Paper>
+        </div>
+            <TransactionsInfoTable />
+        </>
     );
 };
 

@@ -1,14 +1,9 @@
 import React from 'react';
-import { FormControl, Select, MenuItem, OutlinedInput, InputLabel, SvgIcon, Icon, styled } from '@mui/material';
+import { FormControl, Select, MenuItem, OutlinedInput, styled } from '@mui/material';
 import { useAccountContext } from '../../accountContextApi/AccountContext';
 import { SelectChangeEvent } from '@mui/material/Select';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-interface AccountMenuProps {
-    anchorEl: null | HTMLElement;
-    handleClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
-    handleClose: () => void;
-}
 
 const ALL_ACCOUNTS_ID = -1;
 
@@ -21,7 +16,7 @@ const CustomSelect = styled(Select)({
     },
 });
 
-const AccountMenu: React.FC<AccountMenuProps> = ({ anchorEl, handleClick, handleClose }) => {
+const AccountMenu: React.FC = () => {
     const { accounts, setSelectedAccount } = useAccountContext();
     const [selectedAccountId, setSelectedAccountId] = React.useState<number>(ALL_ACCOUNTS_ID);
 
@@ -47,9 +42,9 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ anchorEl, handleClick, handle
                     id="simple-select"
                     value={selectedAccountId}
                     onChange={handleChange}
-                    input={<OutlinedInput label="Select Account" sx={{ color: 'white' }} />}
+                    input={<OutlinedInput sx={{ color: 'white' }} />}
                     IconComponent={(props) => (
-                        <KeyboardArrowDownIcon {...props} sx={{ color: 'white' }} />
+                        <KeyboardArrowDownIcon {...props} />
                     )}
                 >
                     <MenuItem value={ALL_ACCOUNTS_ID}>Všechny účty</MenuItem>

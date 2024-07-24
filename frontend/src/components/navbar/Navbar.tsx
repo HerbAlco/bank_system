@@ -4,34 +4,28 @@ import { AccountCircle } from '@mui/icons-material';
 import AccountMenu from './DropdownAccountMenu';
 import DropdownSendMoney from './DropdownSendMoney';
 import DropdownView from './DropdownVeiw';
+import { useNavigate } from 'react-router-dom';
 
-interface NavbarProps {
-  setView: React.Dispatch<React.SetStateAction<string>>;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ setView }) => {
+const Navbar: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <Box display="flex" justifyContent="center" alignItems="center" marginBottom={'50px'}>
-      <AccountMenu anchorEl={anchorEl} handleClick={handleClick} handleClose={handleClose} />
+      <AccountMenu />
       <AppBar position="static" sx={{ borderRadius: '10px' }}>
         <Toolbar>
-          <MenuItem onClick={() => setView('default')}>Nástěnka</MenuItem>
-          <DropdownSendMoney setView={setView} />
-          <DropdownView setView={setView} />
-          <MenuItem onClick={handleClose}>Platební karty</MenuItem>
-          <MenuItem onClick={handleClose}>Šablony</MenuItem>
+          <MenuItem component="a" href='/home/accountInfo'>Nástěnka</MenuItem>
+          <DropdownSendMoney />
+          <DropdownView />
+          <MenuItem >Platební karty</MenuItem>
+          <MenuItem >Šablony</MenuItem>
           <Box sx={{ flexGrow: 1 }} />
-          <MenuItem onClick={handleClose}>Informace o účtě</MenuItem>
+          <MenuItem >Informace o účtě</MenuItem>
           <Button color="inherit" onClick={handleClick}>
             <AccountCircle />
           </Button>

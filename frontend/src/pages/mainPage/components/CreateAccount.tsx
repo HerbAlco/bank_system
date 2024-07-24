@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Button, FormControl, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { Container } from '@mui/system';
 
 export interface BankAccount {
     id?: number;
@@ -60,36 +61,45 @@ const CreateAccountForm: React.FC = () => {
 
 
     return (
-        <form onSubmit={handleSubmit}>
-            <TextField
-                required
-                fullWidth
-                margin="normal"
-                id="name"
-                name="name"
-                label="Název účtu"
-                value={newAccount.name}
-                onChange={handleTextFieldChange}
-            />
-            <FormControl fullWidth margin="normal">
-                <InputLabel id="accountTypeLabel">Typ účtu</InputLabel>
-                <Select
-                    labelId="accountTypeLabel"
-                    id="accountType"
-                    name="accountType"
-                    label="Typ účtu"
-                    value={newAccount.accountType}
-                    onChange={handleSelectChange}
-                >
-                    {Object.entries(accountTypeTranslations).map(([key, value]) => (
-                        <MenuItem key={key} value={key as AccountType}>{value}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-            <Button type="submit" variant="contained" color="primary">
-                Vytvořit účet
-            </Button>
-        </form>
+        <div style={{ marginTop: '25px', display: 'flex', justifyContent: 'space-between' }}>
+            <Container maxWidth='sm'>
+                <Paper sx={{ padding: 3, marginTop: 3, width: '100%' }}>
+                    <Typography variant="h5" gutterBottom>
+                        Vytvoření nového účtu
+                    </Typography>
+                    <form onSubmit={handleSubmit}>
+                        <TextField
+                            required
+                            fullWidth
+                            margin="normal"
+                            id="name"
+                            name="name"
+                            label="Název účtu"
+                            value={newAccount.name}
+                            onChange={handleTextFieldChange}
+                        />
+                        <FormControl fullWidth margin="normal">
+                            <InputLabel id="accountTypeLabel">Typ účtu</InputLabel>
+                            <Select
+                                labelId="accountTypeLabel"
+                                id="accountType"
+                                name="accountType"
+                                label="Typ účtu"
+                                value={newAccount.accountType}
+                                onChange={handleSelectChange}
+                            >
+                                {Object.entries(accountTypeTranslations).map(([key, value]) => (
+                                    <MenuItem key={key} value={key as AccountType}>{value}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <Button type="submit" variant="contained" color="primary">
+                            Vytvořit účet
+                        </Button>
+                    </form>
+                </Paper>
+            </Container>
+        </div>
     );
 };
 

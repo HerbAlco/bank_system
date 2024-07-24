@@ -10,10 +10,6 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-interface DropdownSendMoneyProps {
-  setView: React.Dispatch<React.SetStateAction<string>>;
-}
-
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
     elevation={0}
@@ -55,7 +51,7 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
-const DropdownView: React.FC<DropdownSendMoneyProps> = ({ setView }) => {
+const DropdownView: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -68,7 +64,6 @@ const DropdownView: React.FC<DropdownSendMoneyProps> = ({ setView }) => {
   };
 
   const handleTuzemskaPlatbaClick = () => {
-    setView('createAccount');
     handleClose();
   };
 
@@ -95,7 +90,7 @@ const DropdownView: React.FC<DropdownSendMoneyProps> = ({ setView }) => {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleTuzemskaPlatbaClick} disableRipple>
+        <MenuItem component="a" href="/home/createAccount">
           <AddIcon />
           Nový účet
         </MenuItem>
