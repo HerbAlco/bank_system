@@ -30,28 +30,33 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 
 	@Override
 	@Transactional
-	public BankAccount save(BankAccount account) {
+	public BankAccount save(BankAccount account)
+	{
 		if (account.getAccountNumber() == null)
 			account.setAccountNumber(generateUniqueAccountNumber());
 
 		return super.save(account);
 	}
 
-	private String generateUniqueAccountNumber() {
+	private String generateUniqueAccountNumber()
+	{
 		String accountNumber;
-		do {
+		do
+		{
 			accountNumber = "CZ100025" + ThreadLocalRandom.current().nextInt(10000, 100000);
-		} while (((AccountRepository) repository).existsByAccountNumber(accountNumber));
+		}
+		while (((AccountRepository)repository).existsByAccountNumber(accountNumber));
 
 		return accountNumber;
 	}
 
 	@Transactional
-	public void processTransaction(TransRequest trans)
+	public void processTransaction(TransRequest trans) throws EntityNotFoundException, IllegalArgumentException
 	{
 		String accountNumber = trans.getAccountNumber();
-		BankAccount fromBankAccount = ((AccountRepository) repository).findByAccountNumber(accountNumber)
-			.orElseThrow(() -> new EntityNotFoundException("Bank account not found with id: " + accountNumber));
+		BankAccount fromBankAccount;
+		fromBankAccount = ((AccountRepository)repository).findByAccountNumber(accountNumber)
+			.orElseThrow(() -> new EntityNotFoundException("Neplatné číslo vašeho účtu"));
 
 		Transaction transaction = new Transaction();
 		transaction.setAccount(fromBankAccount);
@@ -60,13 +65,15 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 		transaction.setTransType(trans.getTransType());
 		transaction.setSymbol(trans.getSymbol());
 
-		BigDecimal newBalance = switch (trans.getTransType()) {
+		BigDecimal newBalance = switch (trans.getTransType())
+		{
 			case DEPOSIT -> handleDeposit(fromBankAccount, trans.getAmount());
 			case WITHDRAW -> handleWithdraw(fromBankAccount, trans.getAmount());
-			case TRANSFER -> {
+			case TRANSFER ->
+			{
 				String toAccountNumber = trans.getToAccountNumber();
 				BankAccount toBankAccount = ((AccountRepository)repository).findByAccountNumber(toAccountNumber)
-					.orElseThrow(() -> new EntityNotFoundException("Account not found with id: " + toAccountNumber));
+					.orElseThrow(() -> new EntityNotFoundException("Zadejte platné číslo protiúčtu"));
 				handleTransfer(trans, fromBankAccount, toBankAccount);
 				transaction.setToAccount(toBankAccount);
 				yield fromBankAccount.getBalance().subtract(trans.getAmount());
@@ -90,14 +97,17 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 		return bankAccount.getBalance().subtract(amount);
 	}
 
-	private void handleTransfer(TransRequest trans, BankAccount fromBankAccount, BankAccount toBankAccount) {
+	private void handleTransfer(TransRequest trans, BankAccount fromBankAccount, BankAccount toBankAccount)
+	{
 		BigDecimal amount = trans.getAmount();
-		if (amount.compareTo(BigDecimal.ZERO) < 0) {
-			throw new IllegalArgumentException("Transfer amount must be positive");
+		if (amount.compareTo(BigDecimal.ZERO) < 0)
+		{
+			throw new IllegalArgumentException("Částka nesmí být záporná");
 		}
 		BigDecimal fromAccountBalance = fromBankAccount.getBalance();
-		if (fromAccountBalance.compareTo(amount) < 0) {
-			throw new InsufficientFundsException("Insufficient balance in the account to make the transfer");
+		if (fromAccountBalance.compareTo(amount) < 0)
+		{
+			throw new InsufficientFundsException("Nedostatěčný zůstatek na účtě");
 		}
 		toBankAccount.setBalance(toBankAccount.getBalance().add(amount));
 		super.save(toBankAccount);

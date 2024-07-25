@@ -28,7 +28,7 @@ const AccountContext = createContext<AccountContextType>({
 export const useAccountContext = () => useContext(AccountContext);
 
 interface AccountProviderProps {
-    children: ReactNode;
+    children?: ReactNode;
 }
 
 export const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
@@ -46,8 +46,18 @@ export const AccountProvider: React.FC<AccountProviderProps> = ({ children }) =>
         }
     }, [selectedAccount]);
 
+    const handleSetAccounts = (accounts: AccountData[]) => {
+        console.log("Setting accounts:", accounts);
+        setAccounts(accounts);
+    };
+
+    const handleSetSelectedAccount = (account: AccountData | null) => {
+        console.log("Setting selected account:", account);
+        setSelectedAccount(account);
+    };
+
     return (
-        <AccountContext.Provider value={{ accounts, selectedAccount, setSelectedAccount, setAccounts }}>
+        <AccountContext.Provider value={{ accounts, selectedAccount, setSelectedAccount: handleSetSelectedAccount, setAccounts: handleSetAccounts }}>
             {children}
         </AccountContext.Provider>
     );

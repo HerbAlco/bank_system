@@ -1,6 +1,7 @@
 import { Paper, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useAccountContext } from '../../../accountContextApi/AccountContext';
 
 const accountTypeTranslations: { [key: string]: string } = {
     CHECKING: "Běžný účet",
@@ -15,15 +16,12 @@ interface AccountData {
     accountType: string;
 }
 
-interface AccountDetailsProps {
-    selectedAccountId: number | undefined;
-}
-
-const AccountDetails: React.FC<AccountDetailsProps> = ({ selectedAccountId }) => {
+const AccountDetails: React.FC = () => {
     const [accountData, setAccountData] = useState<AccountData | null>(null);
+    const { selectedAccount } = useAccountContext();
 
     useEffect(() => {
-        if (selectedAccountId === undefined) return;
+        if (selectedAccount?.id === undefined) return;
 
         const fetchAccountData = async () => {
             const token = localStorage.getItem("token");
@@ -34,7 +32,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ selectedAccountId }) =>
             }
 
             try {
-                const response = await axios.get(`http://localhost:8080/api/v1/auth/account/get/${selectedAccountId}`, {
+                const response = await axios.get(`http://localhost:8080/api/v1/auth/account/get/${selectedAccount.id}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -47,7 +45,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ selectedAccountId }) =>
         };
 
         fetchAccountData();
-    }, [selectedAccountId]);
+    }, [selectedAccount?.id]);
 
     if (!accountData) {
         return (

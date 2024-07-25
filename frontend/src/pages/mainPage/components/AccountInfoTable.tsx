@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { AccountData, useAccountContext } from '../../../accountContextApi/AccountContext';
-import axios from 'axios';
 import TransactionsInfoTable from './transactionsTable/TransactionsInfoTable';
 
 const accountTypeTranslations: { [key: string]: string } = {
@@ -11,7 +10,7 @@ const accountTypeTranslations: { [key: string]: string } = {
 };
 
 const AccountsInfoTable: React.FC = () => {
-    const { accounts, selectedAccount, setSelectedAccount, setAccounts } = useAccountContext();
+    const { accounts, selectedAccount, setSelectedAccount } = useAccountContext();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -21,7 +20,7 @@ const AccountsInfoTable: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            setIsLoading(true);
+            setIsLoading(false);
             setError(null);
 
             const token = localStorage.getItem("token");
@@ -32,19 +31,6 @@ const AccountsInfoTable: React.FC = () => {
                 return;
             }
 
-            try {
-                const response = await axios.get("http://localhost:8080/api/v1/auth/user/getcurrentaccounts", {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                setAccounts(response.data);
-            } catch (error) {
-                console.error("Chyba při načítání účtů:", error);
-                setError("Chyba při načítání účtů");
-            } finally {
-                setIsLoading(false);
-            }
         };
 
         fetchData();

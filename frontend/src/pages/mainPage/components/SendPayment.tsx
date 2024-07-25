@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
+import {
+    Container,
+    Paper,
+    Typography,
+    Grid,
+    TextField,
+    Button,
+    MenuItem,
+    Select,
+    FormControl,
+    SelectChangeEvent,
+    FormHelperText
+} from '@mui/material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import axios from 'axios';
-import { Container, Paper, TextField, Button, Typography, Grid } from '@mui/material';
 import { useAccountContext } from '../../../accountContextApi/AccountContext';
 
 interface SendMoneyForm {
@@ -11,10 +24,8 @@ interface SendMoneyForm {
     symbol: string;
 }
 
-
-const SendPayment: React.FC = ({ }) => {
-    const { selectedAccount } = useAccountContext();
-
+const SendPayment: React.FC = () => {
+    const { selectedAccount, accounts, setSelectedAccount } = useAccountContext();
     const [form, setForm] = useState<SendMoneyForm>({
         accountNumber: selectedAccount?.accountNumber || '',
         toAccountNumber: '',
@@ -23,12 +34,28 @@ const SendPayment: React.FC = ({ }) => {
         symbol: '',
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: string | number }>) => {
+        const { name, value } = e.target as HTMLInputElement;
+
         setForm({
             ...form,
             [name]: value,
         });
+    };
+
+    const handleSelectChange = (event: SelectChangeEvent<string>) => {
+        const accountNumber = event.target.value as string;
+        setForm({
+            ...form,
+            accountNumber,
+        });
+
+        const selectedAccount = accounts.find(account => account.accountNumber === accountNumber);
+        if (selectedAccount) {
+            setSelectedAccount(selectedAccount);
+        } else {
+            setSelectedAccount(null);
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -37,6 +64,10 @@ const SendPayment: React.FC = ({ }) => {
 
         if (!token) {
             console.error('Token is not available');
+            return;
+        }
+        if (form.accountNumber == '') {
+            alert('Vyberte svůj účet')
             return;
         }
 
@@ -55,14 +86,31 @@ const SendPayment: React.FC = ({ }) => {
                     },
                 }
             );
-            alert('Payment sent successfully');
-        } catch (error) {
-            console.error('There was an error sending the payment!', error);
+            alert('Platba úspěšně odeslána');
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                if (error.response) {
+                    const message = error.response.data;
+                    alert(`${message}`);
+                } else if (error.request) {
+                    alert('No response received from server.');
+                } else {
+                    alert('Error: ' + error.message);
+                }
+            } else if (error instanceof Error) {
+                alert('Error: ' + error.message);
+            } else {
+                alert('An unexpected error occurred.');
+            }
         }
+
+
     };
 
+
+
     return (
-        <div style={{ marginTop: '25px', display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ marginTop: '25px', display: 'flex', justifyContent: 'center' }}>
             <Container maxWidth='sm'>
                 <Paper sx={{ padding: 3, marginTop: 3, width: '100%' }}>
                     <Typography variant="h5" gutterBottom>
@@ -71,14 +119,24 @@ const SendPayment: React.FC = ({ }) => {
                     <form onSubmit={handleSubmit}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    label="Váš účet"
-                                    value={selectedAccount?.accountNumber || ''}
-                                    InputProps={{
-                                        readOnly: true,
-                                    }}
-                                />
+                                <FormControl fullWidth>
+                                    <FormHelperText sx={{ fontSize: '18px' }}>Z účtu:</FormHelperText>
+                                    <Select
+                                        labelId="account-select-label"
+                                        id="simple-select"
+                                        value={selectedAccount?.accountNumber}
+                                        onChange={handleSelectChange}
+                                        IconComponent={(props) => (
+                                            <KeyboardArrowDownIcon {...props} />
+                                        )}
+                                    >
+                                        {accounts.map((account) => (
+                                            <MenuItem key={account.accountNumber} value={account.accountNumber}>
+                                                {account.name} - {account.accountNumber}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField

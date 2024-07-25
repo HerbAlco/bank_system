@@ -4,7 +4,6 @@ import { AccountCircle } from '@mui/icons-material';
 import AccountMenu from './DropdownAccountMenu';
 import DropdownSendMoney from './DropdownSendMoney';
 import DropdownView from './DropdownVeiw';
-import { useNavigate } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -25,13 +24,12 @@ const Navbar: React.FC = () => {
           <MenuItem >Platební karty</MenuItem>
           <MenuItem >Šablony</MenuItem>
           <Box sx={{ flexGrow: 1 }} />
-          <MenuItem >Informace o účtě</MenuItem>
+          <MenuItem component="a" href='/home/accountDetails'>Informace o účtě</MenuItem>
           <Button color="inherit" onClick={handleClick}>
-            <AccountCircle />
+            <AccountCircle ></AccountCircle>
           </Button>
         </Toolbar>
       </AppBar>
-
     </Box>
   );
 }

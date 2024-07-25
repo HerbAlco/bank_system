@@ -9,6 +9,8 @@ import {
   TextField,
   Button,
   Grid,
+  CircularProgress,
+  Alert
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -17,6 +19,8 @@ import { useAccountContext } from '../../accountContextApi/AccountContext';
 const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { setAccounts } = useAccountContext();
 
@@ -28,13 +32,14 @@ const LoginPage = () => {
         }
       });
       setAccounts(response.data);
-
     } catch (error) {
       console.error("Chyba při načítání účtů:", error);
     }
   };
 
   const handleLogin = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const response = await axios.post("http://localhost:8080/api/v1/auth/authenticate", {
         username,
@@ -43,10 +48,11 @@ const LoginPage = () => {
       const token = response.data.token;
       localStorage.setItem('token', token);
       await fetchAccountData(token);
-      navigate('/home');
-
+      navigate('/home/accountInfo');
     } catch (error) {
-      console.error("Chyba při přihlašování:", error);
+      setError("Chyba při přihlašování. Zkontrolujte prosím své přihlašovací údaje.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,30 +60,24 @@ const LoginPage = () => {
     <>
       <Container maxWidth="xs">
         <CssBaseline />
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <Avatar sx={{ m: 1, bgcolor: "primary.light" }}>
             <LockOutlined />
           </Avatar>
           <Typography variant="h5">Login</Typography>
           <Box sx={{ mt: 1 }}>
+            {error && <Alert severity="error">{error}</Alert>}
             <TextField
               margin="normal"
               required
               fullWidth
               id="username"
-              label="Username Address"
+              label="Username"
               name="username"
               autoFocus
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
-
             <TextField
               margin="normal"
               required
@@ -87,18 +87,16 @@ const LoginPage = () => {
               label="Password"
               type="password"
               value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
+              onChange={(e) => setPassword(e.target.value)}
             />
-
             <Button
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
               onClick={handleLogin}
+              disabled={loading}
             >
-              Login
+              {loading ? <CircularProgress size={24} /> : 'Login'}
             </Button>
             <Grid container justifyContent={"flex-end"}>
               <Grid item>
