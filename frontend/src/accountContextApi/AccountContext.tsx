@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext, ReactNode } from 'react';
+import React, { useState, createContext, useContext, ReactNode } from 'react';
 import { Transaction } from '../pages/mainPage/components/transactionsTable/types';
 
 export interface AccountData {
@@ -33,18 +33,7 @@ interface AccountProviderProps {
 
 export const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
     const [accounts, setAccounts] = useState<AccountData[]>([]);
-    const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(() => {
-        const storedAccount = localStorage.getItem('selectedAccount');
-        return storedAccount ? JSON.parse(storedAccount) : null;
-    });
-
-    useEffect(() => {
-        if (selectedAccount) {
-            localStorage.setItem('selectedAccount', JSON.stringify(selectedAccount));
-        } else {
-            localStorage.removeItem('selectedAccount');
-        }
-    }, [selectedAccount]);
+    const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(null);
 
     const handleSetAccounts = (accounts: AccountData[]) => {
         console.log("Setting accounts:", accounts);
@@ -55,6 +44,7 @@ export const AccountProvider: React.FC<AccountProviderProps> = ({ children }) =>
         console.log("Setting selected account:", account);
         setSelectedAccount(account);
     };
+
 
     return (
         <AccountContext.Provider value={{ accounts, selectedAccount, setSelectedAccount: handleSetSelectedAccount, setAccounts: handleSetAccounts }}>

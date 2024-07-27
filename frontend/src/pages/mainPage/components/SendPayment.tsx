@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Container,
     Paper,
@@ -34,7 +34,16 @@ const SendPayment: React.FC = () => {
         symbol: '',
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: string | number }>) => {
+    useEffect(() => {
+        if (selectedAccount) {
+            setForm(prevForm => ({
+                ...prevForm,
+                accountNumber: selectedAccount.accountNumber,
+            }));
+        }
+    }, [selectedAccount]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | { name?: string; value: string }>) => {
         const { name, value } = e.target as HTMLInputElement;
 
         setForm({
@@ -52,6 +61,7 @@ const SendPayment: React.FC = () => {
 
         const selectedAccount = accounts.find(account => account.accountNumber === accountNumber);
         if (selectedAccount) {
+            localStorage.setItem('selectedAccountID', String(selectedAccount?.id));
             setSelectedAccount(selectedAccount);
         } else {
             setSelectedAccount(null);
@@ -124,7 +134,7 @@ const SendPayment: React.FC = () => {
                                     <Select
                                         labelId="account-select-label"
                                         id="simple-select"
-                                        value={selectedAccount?.accountNumber}
+                                        value={form.accountNumber}
                                         onChange={handleSelectChange}
                                         IconComponent={(props) => (
                                             <KeyboardArrowDownIcon {...props} />

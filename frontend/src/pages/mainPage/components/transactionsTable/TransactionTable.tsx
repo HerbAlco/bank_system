@@ -21,7 +21,7 @@ const formatDate = (value: string | Date | number) => {
 const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const { selectedAccount } = useAccountContext();
+    const { accounts } = useAccountContext();
 
     const sortedTransactions = [...transactions].sort((a, b) => new Date(b.dateTimeTrans).getTime() - new Date(a.dateTimeTrans).getTime());
 
@@ -33,6 +33,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+
 
     return (
         <TableContainer component={Paper}>
@@ -73,7 +74,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
                             </TableCell>
                             <TableCell>
                                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                    <span style={{ fontWeight: 'bold' }}>{selectedAccount?.name}</span>
+                                    <span style={{ fontWeight: 'bold' }}>{accounts.find(acc => acc.accountNumber === transaction.accountNumber)?.name}</span>
                                     <span>{transaction.accountNumber}</span>
                                 </div>
                             </TableCell>

@@ -16,6 +16,7 @@ const AccountsInfoTable: React.FC = () => {
 
     const handleRowClick = (account: AccountData) => {
         setSelectedAccount(account);
+        localStorage.setItem('selectedAccountID', String(account.id));
     };
 
     useEffect(() => {

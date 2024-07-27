@@ -12,6 +12,7 @@ const Header: React.FC = () => {
     console.log('Odhlášení uživatele');
     setSelectedAccount(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('selectedAccountID');
     navigate('/login');
   };
 

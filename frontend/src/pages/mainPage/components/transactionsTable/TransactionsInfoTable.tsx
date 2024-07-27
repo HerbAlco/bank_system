@@ -42,8 +42,8 @@ const fetchTransactions = async (accountId: number, token: string): Promise<Tran
       symbol: transaction.symbol,
       description: transaction.note,
       transType: getTransTypeDescription(transaction.transType),
-      accountNumber: transaction.accountNumber,
-      toAccountNumber: transaction.toAccountNumber
+      accountNumber: (transaction.amount > 0) ? transaction.toAccountNumber : transaction.accountNumber,
+      toAccountNumber: (transaction.amount > 0) ? transaction.accountNumber : transaction.toAccountNumber
     }));
 
     return [...transactionsData, ...incomingTransactionsData];
@@ -69,7 +69,6 @@ const TransactionsInfoTable: React.FC = () => {
       }
 
       try {
-        setRows([]);
         const allTransactions: Transaction[] = [];
 
         if (!selectedAccount?.id) {
@@ -89,6 +88,7 @@ const TransactionsInfoTable: React.FC = () => {
         setRows([]);
       }
     };
+
 
     fetchData();
   }, [selectedAccount, accounts]);

@@ -13,6 +13,6 @@ export interface Transaction {
     symbol: string;
     description: string;
     transType: string;
-    accountNumber: number;
-    toAccountNumber: number;
+    accountNumber: string;
+    toAccountNumber: string;
 }

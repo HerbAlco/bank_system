@@ -34,10 +34,12 @@ const AccountMenu: React.FC = () => {
 
         if (accountId === ALL_ACCOUNTS_ID) {
             setSelectedAccount(null);
+            localStorage.removeItem('selectedAccountID');
         } else {
             const selectedAccount = accounts.find(account => account.id === accountId);
             if (selectedAccount) {
                 setSelectedAccount(selectedAccount);
+                localStorage.setItem('selectedAccountID', String(selectedAccount?.id));
             }
         }
     };
