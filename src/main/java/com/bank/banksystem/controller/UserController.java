@@ -23,7 +23,6 @@ public class UserController
 
 	private final UserServiceImpl userService;
 	private final AccountServiceImpl accountService;
-	private final JwtService jwtService;
 
 	@PostMapping("/add")
 	public ResponseEntity<User> addUser(@RequestBody User user)

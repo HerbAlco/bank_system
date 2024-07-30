@@ -5,11 +5,11 @@ import com.bank.banksystem.entity.user_entity.Role;
 import com.bank.banksystem.entity.user_entity.User;
 import com.bank.banksystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +17,7 @@ public class AuthService {
 
 	private final UserRepository repository;
 	private final PasswordEncoder passwordEncoder;
+	@Autowired
 	private final JwtService jwtService;
 	private final AuthenticationManager authManager;
 
@@ -43,7 +44,7 @@ public class AuthService {
 				request.getPassword()
 			)
 		);
-		var user = repository.findByUsername(request.getUsername()).orElseThrow();
+		var user = repository.findByEmail(request.getUsername()).orElseThrow();
 		var jwtToken = jwtService.generateToken(user);
 		return AuthResponse.builder()
 			.token(jwtToken)

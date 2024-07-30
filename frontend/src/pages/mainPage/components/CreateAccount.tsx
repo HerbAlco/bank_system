@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Button, FormControl, InputLabel, MenuItem, Paper, Select, TextField, Typography } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { Container } from '@mui/system';
+import { useNavigate } from 'react-router-dom';
 
 export interface BankAccount {
     id?: number;
@@ -27,6 +28,7 @@ const CreateAccountForm: React.FC = () => {
         name: '',
         accountType: AccountType.CHECKING,
     });
+    const navigate = useNavigate();
 
 
     const handleTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,9 +53,10 @@ const CreateAccountForm: React.FC = () => {
                 }
             })
                 .catch(error => {
-                    // Handle error
-                    console.error('Error creating account:', error);
+                    alert(error + ": " + "Chyba při vatváření účtu")
                 });
+            alert("Váš účet byl úspěšně vytvořen.")
+            navigate("/home/accountInfo");
         } else {
             console.error('No token found. Please log in.');
         }

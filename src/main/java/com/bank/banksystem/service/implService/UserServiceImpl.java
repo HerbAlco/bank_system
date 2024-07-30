@@ -21,7 +21,7 @@ public class UserServiceImpl extends AbstractService<User, Long>
 
 	public Optional<User> getUserByEmail(String email)
 	{
-		return userRepository.findByUsername(email);
+		return userRepository.findByEmail(email);
 	}
 
 }

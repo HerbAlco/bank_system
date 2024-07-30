@@ -134,6 +134,7 @@ const SendPayment: React.FC = () => {
                                     <Select
                                         labelId="account-select-label"
                                         id="simple-select"
+                                        required
                                         value={form.accountNumber}
                                         onChange={handleSelectChange}
                                         IconComponent={(props) => (
@@ -153,6 +154,7 @@ const SendPayment: React.FC = () => {
                                     fullWidth
                                     label="Na číslo účtu"
                                     name="toAccountNumber"
+                                    required
                                     value={form.toAccountNumber}
                                     onChange={handleChange}
                                 />
@@ -162,7 +164,8 @@ const SendPayment: React.FC = () => {
                                     fullWidth
                                     label="Částka"
                                     name="amount"
-                                    type="number"
+                                    type="tel"
+                                    required
                                     value={form.amount}
                                     onChange={handleChange}
                                 />

@@ -33,7 +33,7 @@ const AccountDetails: React.FC = () => {
             <div>
                 <Typography variant="body1"><b>Název účtu:</b> {selectedAccount.name}</Typography>
                 <Typography variant="body1"><b>Číslo účtu:</b> {selectedAccount.accountNumber}</Typography>
-                <Typography variant="body1"><b>Zůstatek:</b> {selectedAccount.balance}</Typography>
+                <Typography variant="body1"><b>Zůstatek:</b> {selectedAccount.balance.toLocaleString('cs', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Typography>
                 <Typography variant="body1"><b>Typ účtu:</b> {accountTypeTranslations[selectedAccount.accountType] || selectedAccount.accountType}</Typography>
             </div>
         </Paper>

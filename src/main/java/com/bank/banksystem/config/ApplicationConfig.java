@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Configuration
 @AllArgsConstructor
@@ -22,7 +21,7 @@ public class ApplicationConfig {
 
 	@Bean
 	public UserDetailsService userDetailsService(){
-		return username -> repository.findByUsername(username)
+		return username -> repository.findByEmail(username)
 			.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 	}
 

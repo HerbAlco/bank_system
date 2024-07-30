@@ -70,7 +70,7 @@ const TransactionsTable: React.FC<TransactionsTableProps> = ({ transactions }) =
                                     fontWeight: transaction.amount > 0 ? 'bold' : 'normal'
                                 }}
                             >
-                                {transaction.amount}
+                                {transaction.amount.toLocaleString('cs', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </TableCell>
                             <TableCell>
                                 <div style={{ display: 'flex', flexDirection: 'column' }}>

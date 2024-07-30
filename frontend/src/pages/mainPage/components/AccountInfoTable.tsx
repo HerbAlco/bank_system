@@ -69,7 +69,7 @@ const AccountsInfoTable: React.FC = () => {
                                 <TableRow>
                                     <TableCell colSpan={3}>Chyba: {error}</TableCell>
                                 </TableRow>
-                            ) : (
+                            ) : accounts && accounts.length > 0 ? (
                                 accounts.map((account) => (
                                     <TableRow
                                         key={account.id}
@@ -83,13 +83,17 @@ const AccountsInfoTable: React.FC = () => {
                                                 fontWeight: 'bold'
                                             }}
                                         >
-                                            {account.balance}
+                                            {account.balance.toLocaleString('cs', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                         </TableCell>
                                         <TableCell>
                                             {accountTypeTranslations[account.accountType] || account.accountType}
                                         </TableCell>
                                     </TableRow>
                                 ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={3}>Žádné účty nebyly nalezeny.</TableCell>
+                                </TableRow>
                             )}
                         </TableBody>
                     </Table>
