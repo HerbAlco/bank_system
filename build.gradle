@@ -28,9 +28,17 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-	implementation 'org.json:json:20211205'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.0-M2'
+	implementation 'org.json:json:20231013'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+configurations {
+	all {
+		exclude group: 'org.json', module: 'json'
+	}
+}
+
