@@ -76,7 +76,7 @@ const SendPayment: React.FC = () => {
             console.error('Token is not available');
             return;
         }
-        if (form.accountNumber == '') {
+        if (form.accountNumber === '') {
             alert('Vyberte svůj účet')
             return;
         }
