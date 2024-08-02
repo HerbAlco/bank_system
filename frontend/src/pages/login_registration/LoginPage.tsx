@@ -48,7 +48,7 @@ const LoginPage = () => {
       const token = response.data.token;
       localStorage.setItem('token', token);
       await fetchAccountData(token);
-      navigate('/home/accountInfo');
+      navigate('/home/accountsInfo');
     } catch (error) {
       setError("Chyba při přihlašování. Zkontrolujte prosím své přihlašovací údaje.");
     } finally {

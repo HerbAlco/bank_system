@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
       <AccountMenu />
       <AppBar position="static" sx={{ borderRadius: '10px' }}>
         <Toolbar>
-          <MenuItem component="a" href='/home/accountInfo'>Nástěnka</MenuItem>
+          <MenuItem component="a" href='/home/accountsInfo'>Nástěnka</MenuItem>
           <DropdownSendMoney />
           <DropdownView />
           <MenuItem >Platební karty</MenuItem>

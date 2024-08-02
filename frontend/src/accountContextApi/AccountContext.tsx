@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext, ReactNode } from 'react';
-import { Transaction } from '../pages/mainPage/components/transactionsTable/types';
+import { Transaction } from '../pages/mainPage/components/homeAccountsTransactionsTable/types';
 
 export interface AccountData {
     id: number;
@@ -9,6 +9,12 @@ export interface AccountData {
     accountType: string;
     transactions: Transaction[];
     incomingTransactions: Transaction[];
+}
+
+export enum AccountType {
+    CHECKING = "CHECKING",
+    SAVINGS = "SAVINGS",
+    BUSINESS = "BUSINESS",
 }
 
 interface AccountContextType {

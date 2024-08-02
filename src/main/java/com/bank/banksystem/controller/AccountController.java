@@ -71,16 +71,21 @@ public class AccountController
 	}
 
 	@PutMapping("/update/{id}")
-	public ResponseEntity<BankAccount> updateAccount(@PathVariable Long id, @RequestBody BankAccount bankAccountDetails)
+	public ResponseEntity<BankAccount> updateAccount(@RequestHeader("Authorization") String authorizationHeader,
+		@PathVariable Long id, @RequestBody BankAccount bankAccountDetails)
 	{
+
 		BankAccount existingBankAccount = accountService.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("Bank account not found with id: " + id));
 
 		if (bankAccountDetails.getName() != null)
 			existingBankAccount.setName(bankAccountDetails.getName());
+		if (bankAccountDetails.getAccountType() != null)
+			existingBankAccount.setAccountType(bankAccountDetails.getAccountType());
 
 		BankAccount updatedBankAccount = accountService.save(existingBankAccount);
 		return ResponseEntity.ok(updatedBankAccount);
+
 	}
 
 

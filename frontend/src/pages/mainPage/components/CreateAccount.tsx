@@ -4,17 +4,12 @@ import { Button, FormControl, InputLabel, MenuItem, Paper, Select, TextField, Ty
 import { SelectChangeEvent } from '@mui/material/Select';
 import { Container } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
+import { AccountType } from '../../../accountContextApi/AccountContext';
 
 export interface BankAccount {
     id?: number;
     name: string;
     accountType: AccountType;
-}
-
-export enum AccountType {
-    CHECKING = "CHECKING",
-    SAVINGS = "SAVINGS",
-    BUSINESS = "BUSINESS",
 }
 
 const accountTypeTranslations: { [key in AccountType]: string } = {
@@ -56,7 +51,7 @@ const CreateAccountForm: React.FC = () => {
                     alert(error + ": " + "Chyba při vatváření účtu")
                 });
             alert("Váš účet byl úspěšně vytvořen.")
-            navigate("/home/accountInfo");
+            navigate("/home/accountsInfo");
         } else {
             console.error('No token found. Please log in.');
         }
