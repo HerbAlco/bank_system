@@ -127,7 +127,7 @@ const AccountDetails: React.FC = () => {
                         <Button variant="contained" onClick={handleClose} color="error">
                             Zrušit
                         </Button>
-                        <Button variant="contained" onClick={handleSubmit} color="success" content='a' href='home/accountsInfo'>
+                        <Button variant="contained" onClick={handleSubmit} color="success" href='/home/accountsInfo'>
                             Uložit
                         </Button>
                     </DialogActions>

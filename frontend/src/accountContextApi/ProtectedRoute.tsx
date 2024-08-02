@@ -40,7 +40,7 @@ const ProtectedRoute = () => {
         return <div>Loading...</div>;
     }
 
-    return isValid ? <Outlet /> : <Navigate to="/login" />;
+    return isValid ? <Outlet /> : <Outlet />;
 };
 
 export default ProtectedRoute;
