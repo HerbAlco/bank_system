@@ -50,7 +50,6 @@ const LoginPage = () => {
       await fetchAccountData(token);
       navigate('/home/accountsInfo');
     } catch (error) {
-      navigate('/home/accountsInfo');
       setError("Chyba při přihlašování. Zkontrolujte prosím své přihlašovací údaje.");
     } finally {
       setLoading(false);

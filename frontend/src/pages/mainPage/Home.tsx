@@ -15,7 +15,7 @@ const Home: React.FC = () => {
     const fetchAccounts = async () => {
       const token = localStorage.getItem('token');
       if (!token) {
-        /* navigate('/login'); */
+        navigate('/login');
       } else {
         setIsAuthenticated(true);
         try {
@@ -51,9 +51,9 @@ const Home: React.FC = () => {
     fetchAccounts();
   }, [navigate]);
 
-  /* if (isAuthenticated === null) {
+  if (isAuthenticated === null) {
     return <div>Loading...</div>;
-  } */
+  }
 
   return (
     <div>
