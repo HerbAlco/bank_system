@@ -19,14 +19,14 @@ const App = () => {
           <Route path="/" element={<LoginPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationPage />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/home" element={<Home />}>
-              <Route path="createAccount" element={<CreateAccount />} />
-              <Route path="accountsInfo" element={<AccountsInfoTable />} />
-              <Route path="payment" element={<SendPayment />} />
-              <Route path='accountDetails' element={<AccountDetails />} />
-            </Route>
+          {/* <Route element={<ProtectedRoute />}> */}
+          <Route path="/home" element={<Home />}>
+            <Route path="createAccount" element={<CreateAccount />} />
+            <Route path="accountsInfo" element={<AccountsInfoTable />} />
+            <Route path="payment" element={<SendPayment />} />
+            <Route path='accountDetails' element={<AccountDetails />} />
           </Route>
+          {/* </Route> */}
         </Routes>
       </AccountProvider>
     </Router>
