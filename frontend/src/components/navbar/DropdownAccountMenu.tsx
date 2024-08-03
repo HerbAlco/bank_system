@@ -17,7 +17,7 @@ const CustomSelect = styled(Select)({
 });
 
 const AccountMenu: React.FC = () => {
-    const { accounts = [], setSelectedAccount, selectedAccount } = useAccountContext();
+    const { accounts, setSelectedAccount, selectedAccount } = useAccountContext();
     const [selectedAccountId, setSelectedAccountId] = useState<number>(ALL_ACCOUNTS_ID);
 
     useEffect(() => {
@@ -44,6 +44,8 @@ const AccountMenu: React.FC = () => {
         }
     };
 
+    console.log('Accounts:', accounts);
+
     return (
         <div>
             <FormControl sx={{ m: 1, width: 200, backgroundColor: 'green', borderRadius: '8px' }}>
@@ -58,7 +60,7 @@ const AccountMenu: React.FC = () => {
                     )}
                 >
                     <MenuItem value={ALL_ACCOUNTS_ID}>Všechny účty</MenuItem>
-                    {accounts.map((account) => (
+                    {Array.isArray(accounts) && accounts.map((account) => (
                         <MenuItem key={account.id} value={account.id}>
                             {account.name}
                         </MenuItem>
