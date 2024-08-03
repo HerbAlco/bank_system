@@ -4,7 +4,7 @@ import { Button, FormControl, InputLabel, MenuItem, Paper, Select, TextField, Ty
 import { SelectChangeEvent } from '@mui/material/Select';
 import { Container } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
-import { AccountType } from '../../../accountContextApi/AccountContext';
+import { AccountType, useAccountContext } from '../../../accountContextApi/AccountContext';
 
 export interface BankAccount {
     id?: number;
@@ -24,6 +24,7 @@ const CreateAccountForm: React.FC = () => {
         accountType: AccountType.CHECKING,
     });
     const navigate = useNavigate();
+    const { setIsAuthenticated } = useAccountContext();
 
 
     const handleTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,6 +52,7 @@ const CreateAccountForm: React.FC = () => {
                 });
 
                 alert("Váš účet byl úspěšně vytvořen.");
+                setIsAuthenticated(null);
                 navigate("/home/accountsInfo");
             } catch (error: unknown) {
                 if (axios.isAxiosError(error)) {
