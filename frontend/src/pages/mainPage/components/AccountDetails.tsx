@@ -12,7 +12,7 @@ const accountTypeTranslations: { [key: string]: string } = {
 };
 
 const AccountDetails: React.FC = () => {
-    const { selectedAccount } = useAccountContext();
+    const { selectedAccount, setIsAuthenticated } = useAccountContext();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [newName, setNewName] = useState(selectedAccount?.name || null);
@@ -49,6 +49,7 @@ const AccountDetails: React.FC = () => {
             })
                 .then(response => {
                     alert("Váš účet byl úspěšně upraven.");
+                    setIsAuthenticated(null);
                     navigate("/home/accountsInfo");
                 })
                 .catch(error => {
