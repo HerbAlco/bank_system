@@ -33,9 +33,10 @@ const Register = () => {
   const handleRegister = async () => {
     try {
       await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/auth/register`, formData);
-      console.log("Registrace úspěšná");
+      alert("Uspěšně jste se registroval")
       navigate("/login");
     } catch (error) {
+      alert("Chyba při registraci:")
       console.error("Chyba při registraci:", error);
     }
   };
