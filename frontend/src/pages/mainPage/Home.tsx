@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Navbar from '../../components/navbar/Navbar';
 import axios from 'axios';
@@ -7,9 +7,9 @@ import { AccountData, useAccountContext } from '../../accountContextApi/AccountC
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const { setAccounts, setSelectedAccount } = useAccountContext();
-
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -24,8 +24,6 @@ const Home: React.FC = () => {
               'Authorization': `Bearer ${token}`
             }
           });
-
-          console.log('API response data:', response.data);
 
           const accounts = Array.isArray(response.data) ?
             response.data.sort((a, b) => a.id - b.id) :
@@ -46,7 +44,7 @@ const Home: React.FC = () => {
     };
 
     fetchAccounts();
-  }, [navigate, setAccounts, setSelectedAccount]);
+  }, [location.pathname, navigate, setAccounts, setSelectedAccount]);
 
   if (isAuthenticated === null) {
     return <div>Loading...</div>;
