@@ -3,15 +3,15 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Navbar from '../../components/navbar/Navbar';
 import axios from 'axios';
-import { useAccountContext } from '../../accountContextApi/AccountContext';
+import { AccountData, useAccountContext } from '../../accountContextApi/AccountContext';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const { setAccounts, setSelectedAccount } = useAccountContext();
 
-  useEffect(() => {
 
+  useEffect(() => {
     const fetchAccounts = async () => {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -19,25 +19,25 @@ const Home: React.FC = () => {
       } else {
         setIsAuthenticated(true);
         try {
-          const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/auth/user/getcurrentaccounts`, {
+          const response = await axios.get<AccountData[]>(`${process.env.REACT_APP_API_URL}/api/v1/auth/user/getcurrentaccounts`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
           });
-          const accounts = response.data.sort((a: { id: number }, b: { id: number }) => {
-            return a.id - b.id;
-          });
+
+          console.log('API response data:', response.data);
+
+          const accounts = Array.isArray(response.data) ?
+            response.data.sort((a, b) => a.id - b.id) :
+            [];
+
           setAccounts(accounts);
 
           const selectedAccountID = localStorage.getItem('selectedAccountID');
           const id = selectedAccountID ? parseInt(selectedAccountID, 10) : null;
 
-          const account = accounts.find((acc: { id: number | null }) => acc.id === id);
-          if (account) {
-            setSelectedAccount(account);
-          } else {
-            setSelectedAccount(null);
-          }
+          const account = accounts.find(acc => acc.id === id);
+          setSelectedAccount(account || null);
 
         } catch (error) {
           console.error("Chyba při načítání účtů:", error);
@@ -45,11 +45,8 @@ const Home: React.FC = () => {
       }
     };
 
-
-
-
     fetchAccounts();
-  }, [navigate]);
+  }, [navigate, setAccounts, setSelectedAccount]);
 
   if (isAuthenticated === null) {
     return <div>Loading...</div>;
