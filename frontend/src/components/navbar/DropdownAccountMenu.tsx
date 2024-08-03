@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormControl, Select, MenuItem, OutlinedInput, styled } from '@mui/material';
 import { useAccountContext } from '../../accountContextApi/AccountContext';
 import { SelectChangeEvent } from '@mui/material/Select';
@@ -17,8 +17,8 @@ const CustomSelect = styled(Select)({
 });
 
 const AccountMenu: React.FC = () => {
-    const { accounts, setSelectedAccount, selectedAccount } = useAccountContext();
-    const [selectedAccountId, setSelectedAccountId] = React.useState<number>(ALL_ACCOUNTS_ID);
+    const { accounts = [], setSelectedAccount, selectedAccount } = useAccountContext();
+    const [selectedAccountId, setSelectedAccountId] = useState<number>(ALL_ACCOUNTS_ID);
 
     useEffect(() => {
         if (selectedAccount) {
@@ -39,7 +39,7 @@ const AccountMenu: React.FC = () => {
             const selectedAccount = accounts.find(account => account.id === accountId);
             if (selectedAccount) {
                 setSelectedAccount(selectedAccount);
-                localStorage.setItem('selectedAccountID', String(selectedAccount?.id));
+                localStorage.setItem('selectedAccountID', String(selectedAccount.id));
             }
         }
     };

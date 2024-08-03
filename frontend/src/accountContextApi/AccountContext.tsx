@@ -42,12 +42,10 @@ export const AccountProvider: React.FC<AccountProviderProps> = ({ children }) =>
     const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(null);
 
     const handleSetAccounts = (accounts: AccountData[]) => {
-        console.log("Setting accounts:", accounts);
         setAccounts(accounts);
     };
 
     const handleSetSelectedAccount = (account: AccountData | null) => {
-        console.log("Setting selected account:", account);
         setSelectedAccount(account);
     };
 
