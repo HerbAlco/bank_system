@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Navbar from '../../components/navbar/Navbar';
 import axios from 'axios';
@@ -7,9 +7,9 @@ import { useAccountContext } from '../../accountContextApi/AccountContext';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const { setAccounts, setSelectedAccount } = useAccountContext();
-
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -45,11 +45,9 @@ const Home: React.FC = () => {
       }
     };
 
-    if (isAuthenticated === null) {
-      fetchAccounts();
-    }
+    fetchAccounts();
 
-  }, [navigate, setAccounts, setSelectedAccount]);
+  }, [location, navigate, setAccounts, setSelectedAccount]);
 
   if (isAuthenticated === null) {
     return <div>Loading...</div>;
