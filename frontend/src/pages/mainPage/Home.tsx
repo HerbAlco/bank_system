@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Navbar from '../../components/navbar/Navbar';
 import axios from 'axios';
-import { AccountData, useAccountContext } from '../../accountContextApi/AccountContext';
+import { useAccountContext } from '../../accountContextApi/AccountContext';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const Home: React.FC = () => {
       } else {
         setIsAuthenticated(true);
         try {
-          const response = await axios.get<AccountData[]>(`${process.env.REACT_APP_API_URL}/api/v1/auth/user/getcurrentaccounts`, {
+          const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/auth/user/getcurrentaccounts`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -28,7 +28,7 @@ const Home: React.FC = () => {
           console.log('API response data:', response.data);
 
           const accounts = Array.isArray(response.data) ?
-            response.data.sort((a, b) => a.id - b.id) :
+            response.data.sort((a: { id: number }, b: { id: number }) => a.id - b.id) :
             [];
 
           setAccounts(accounts);
@@ -36,7 +36,7 @@ const Home: React.FC = () => {
           const selectedAccountID = localStorage.getItem('selectedAccountID');
           const id = selectedAccountID ? parseInt(selectedAccountID, 10) : null;
 
-          const account = accounts.find(acc => acc.id === id);
+          const account = accounts.find((acc: { id: number | null }) => acc.id === id);
           setSelectedAccount(account || null);
 
         } catch (error) {
