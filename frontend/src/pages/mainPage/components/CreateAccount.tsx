@@ -42,7 +42,7 @@ const CreateAccountForm: React.FC = () => {
         const token = localStorage.getItem('token');
 
         if (token) {
-            axios.post('${process.env.REACT_APP_API_URL}/api/v1/auth/account/create', accountToSubmit, {
+            axios.post(`${process.env.REACT_APP_API_URL}/api/v1/auth/account/create`, accountToSubmit, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
