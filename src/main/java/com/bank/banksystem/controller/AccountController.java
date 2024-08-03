@@ -75,6 +75,7 @@ public class AccountController
 		@PathVariable Long id, @RequestBody BankAccount bankAccountDetails)
 	{
 
+
 		BankAccount existingBankAccount = accountService.findById(id)
 			.orElseThrow(() -> new EntityNotFoundException("Bank account not found with id: " + id));
 
