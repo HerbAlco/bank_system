@@ -49,7 +49,7 @@ public class SecurityConfig
 	{
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(
-			List.of("http://localhost:3000", "https://api.render.com/deploy/srv-cqlqthrv2p9s73bnj5qg?key=yNjSaZzeC_o"));
+			List.of("http://localhost:3000", "https://bank-system-2n6x.onrender.com"));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT"));
 		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
 		configuration.setAllowCredentials(true);
