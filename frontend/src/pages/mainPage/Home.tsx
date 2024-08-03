@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Navbar from '../../components/navbar/Navbar';
 import axios from 'axios';
 import { AccountData, useAccountContext } from '../../accountContextApi/AccountContext';
 
+
 const Home: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const { setAccounts, setSelectedAccount } = useAccountContext();
+
+  const lastLocation = useRef<string | null>(null);
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -24,6 +27,8 @@ const Home: React.FC = () => {
               'Authorization': `Bearer ${token}`
             }
           });
+
+          console.log('API response data:', response.data);
 
           const accounts = Array.isArray(response.data) ?
             response.data.sort((a, b) => a.id - b.id) :
@@ -44,6 +49,16 @@ const Home: React.FC = () => {
     };
 
     fetchAccounts();
+
+    if (lastLocation.current !== location.pathname) {
+      fetchAccounts();
+      lastLocation.current = location.pathname;
+    }
+
+    return () => {
+      lastLocation.current = location.pathname;
+    };
+
   }, [location.pathname, navigate, setAccounts, setSelectedAccount]);
 
   if (isAuthenticated === null) {
