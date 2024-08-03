@@ -9,6 +9,7 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 import FileCopyIcon from '@mui/icons-material/FileCopy';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useNavigate } from 'react-router-dom';
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -54,6 +55,8 @@ const StyledMenu = styled((props: MenuProps) => (
 const DropdownView: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -65,6 +68,11 @@ const DropdownView: React.FC = () => {
 
   const handleTuzemskaPlatbaClick = () => {
     handleClose();
+  };
+
+  const handleNavigation = (path: string) => () => {
+    handleClose();
+    navigate(path);
   };
 
   return (
@@ -90,7 +98,7 @@ const DropdownView: React.FC = () => {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem component="a" href="/home/createAccount">
+        <MenuItem onClick={handleNavigation('/home/createAccount')}>
           <AddIcon />
           Nový účet
         </MenuItem>
