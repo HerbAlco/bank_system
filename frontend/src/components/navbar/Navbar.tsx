@@ -5,10 +5,12 @@ import AccountMenu from './DropdownAccountMenu';
 import DropdownSendMoney from './DropdownSendMoney';
 import DropdownView from './DropdownVeiw';
 import { useNavigate } from 'react-router-dom';
+import { useAccountContext } from '../../accountContextApi/AccountContext';
 
 const Navbar: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const { setIsAuthenticated } = useAccountContext();
 
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -16,6 +18,7 @@ const Navbar: React.FC = () => {
   };
 
   const handleNavigation = (path: string) => () => {
+    setIsAuthenticated(null);
     navigate(path);
   };
 

@@ -10,6 +10,7 @@ import FileCopyIcon from '@mui/icons-material/FileCopy';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from 'react-router-dom';
+import { useAccountContext } from '../../accountContextApi/AccountContext';
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -56,6 +57,8 @@ const DropdownView: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
+  const { setIsAuthenticated } = useAccountContext();
+
 
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -72,6 +75,7 @@ const DropdownView: React.FC = () => {
 
   const handleNavigation = (path: string) => () => {
     handleClose();
+    setIsAuthenticated(null);
     navigate(path);
   };
 

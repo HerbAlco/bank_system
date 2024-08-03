@@ -7,9 +7,7 @@ import { useAccountContext } from '../../accountContextApi/AccountContext';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const { setAccounts, setSelectedAccount } = useAccountContext();
+  const { setAccounts, setSelectedAccount, setIsAuthenticated, isAuthenticated } = useAccountContext();
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -44,10 +42,11 @@ const Home: React.FC = () => {
         }
       }
     };
+    if (isAuthenticated === null) {
+      fetchAccounts();
+    }
 
-    fetchAccounts();
-
-  }, [location, navigate, setAccounts, setSelectedAccount]);
+  }, [navigate, setAccounts, setSelectedAccount]);
 
   if (isAuthenticated === null) {
     return <div>Loading...</div>;

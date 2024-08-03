@@ -40,7 +40,7 @@ public class AccountController
 			if (currentUser.isPresent())
 			{
 				bankAccount.setUser(currentUser.get());
-				bankAccount.setBalance(BigDecimal.valueOf(0.0));
+				bankAccount.setBalance(BigDecimal.valueOf(5000.00));
 				BankAccount savedBankAccount = accountService.save(bankAccount);
 				return new ResponseEntity<>(savedBankAccount, HttpStatus.CREATED);
 			}

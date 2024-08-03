@@ -35,12 +35,6 @@ public class DataInitializer {
 				admin.setRole(Role.ADMIN);
 				userRepository.save(admin);
 			}
-			User admin = userRepository.findByEmail("admin").get();
-			admin.setUsername("admin");
-			admin.setFirstName("admin");
-			admin.setLastName("admin");
-			admin.setPhoneNumber("654987321");
-			userRepository.save(admin);
 		};
 	}
 

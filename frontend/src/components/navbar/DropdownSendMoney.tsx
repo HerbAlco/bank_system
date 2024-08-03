@@ -2,11 +2,13 @@ import React from 'react';
 import { Button, Menu, MenuItem, Divider } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useNavigate } from 'react-router-dom';
+import { useAccountContext } from '../../accountContextApi/AccountContext';
 
 const DropdownSendMoney: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
+  const { setIsAuthenticated } = useAccountContext();
 
 
 
@@ -20,6 +22,7 @@ const DropdownSendMoney: React.FC = () => {
 
   const handleNavigation = (path: string) => () => {
     handleClose();
+    setIsAuthenticated(null);
     navigate(path);
   };
 
