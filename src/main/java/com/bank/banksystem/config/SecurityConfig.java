@@ -25,21 +25,19 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig
+{
 
 	private final JwtAuthenticationFilter jwtAuthFilter;
 	private final AuthenticationProvider authenticationProvider;
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http
-			.csrf(AbstractHttpConfigurer::disable)
-			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-			.authorizeHttpRequests(authz -> authz
-				.requestMatchers("/api/v1/auth/**").permitAll()
-				.anyRequest().authenticated())
-			.sessionManagement(session -> session
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
+	{
+		http.csrf(AbstractHttpConfigurer::disable).cors(cors -> cors.configurationSource(corsConfigurationSource()))
+			.authorizeHttpRequests(
+				authz -> authz.requestMatchers("/api/v1/auth/**").permitAll().anyRequest().authenticated())
+			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authenticationProvider(authenticationProvider)
 			.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -47,9 +45,11 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
+	CorsConfigurationSource corsConfigurationSource()
+	{
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("https://api.render.com/deploy/srv-cqlqthrv2p9s73bnj5qg?key=yNjSaZzeC_o"));
+		configuration.setAllowedOrigins(
+			List.of("http://localhost:3000", "https://api.render.com/deploy/srv-cqlqthrv2p9s73bnj5qg?key=yNjSaZzeC_o"));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT"));
 		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
 		configuration.setAllowCredentials(true);
