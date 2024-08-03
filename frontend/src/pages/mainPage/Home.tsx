@@ -19,7 +19,7 @@ const Home: React.FC = () => {
       } else {
         setIsAuthenticated(true);
         try {
-          const response = await axios.get("http://localhost:8080/api/v1/auth/user/getcurrentaccounts", {
+          const response = await axios.get("${process.env.REACT_APP_API_URL}/api/v1/auth/user/getcurrentaccounts", {
             headers: {
               'Authorization': `Bearer ${token}`
             }

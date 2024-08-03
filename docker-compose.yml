@@ -2,6 +2,14 @@ version: '3.8'
 
 services:
 
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=https://api.render.com/deploy/srv-cqlqthrv2p9s73bnj5qg?key=yNjSaZzeC_o
+    depends_on:
+      - backend
 
   backend:
     build: ./

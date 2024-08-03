@@ -49,7 +49,7 @@ public class SecurityConfig {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+		configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://api.render.com/deploy/srv-cqlqthrv2p9s73bnj5qg?key=yNjSaZzeC_o"));
 		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT"));
 		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
 		configuration.setAllowCredentials(true);

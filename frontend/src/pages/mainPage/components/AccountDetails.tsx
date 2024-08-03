@@ -39,7 +39,7 @@ const AccountDetails: React.FC = () => {
         const token = localStorage.getItem('token');
 
         if (token && selectedAccount != null) {
-            axios.put('http://localhost:8080/api/v1/auth/account/update/' + selectedAccount.id, {
+            axios.put('${process.env.REACT_APP_API_URL}/api/v1/auth/account/update/' + selectedAccount.id, {
                 name: newName,
                 accountType: newAccountType,
             }, {

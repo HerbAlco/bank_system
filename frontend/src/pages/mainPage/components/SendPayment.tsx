@@ -88,7 +88,7 @@ const SendPayment: React.FC = () => {
 
         try {
             await axios.post(
-                'http://localhost:8080/api/v1/auth/account/processTransaction',
+                '${process.env.REACT_APP_API_URL}/api/v1/auth/account/processTransaction',
                 transactionData,
                 {
                     headers: {
