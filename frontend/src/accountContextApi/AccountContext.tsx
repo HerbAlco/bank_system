@@ -20,15 +20,19 @@ export enum AccountType {
 interface AccountContextType {
     accounts: AccountData[];
     selectedAccount: AccountData | null;
+    isAuthenticated: boolean | null;
     setSelectedAccount: (account: AccountData | null) => void;
     setAccounts: (accounts: AccountData[]) => void;
+    setIsAuthenticated: (isAuthenticated: boolean | null) => void;
 }
 
 const AccountContext = createContext<AccountContextType>({
     accounts: [],
     selectedAccount: null,
+    isAuthenticated: null,
     setSelectedAccount: () => { },
     setAccounts: () => { },
+    setIsAuthenticated: () => { },
 });
 
 export const useAccountContext = () => useContext(AccountContext);
@@ -40,20 +44,22 @@ interface AccountProviderProps {
 export const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
     const [accounts, setAccounts] = useState<AccountData[]>([]);
     const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(null);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // Přidání isAuthenticated
 
     const handleSetAccounts = (accounts: AccountData[]) => {
-        console.log("Setting accounts:", accounts);
         setAccounts(accounts);
     };
 
     const handleSetSelectedAccount = (account: AccountData | null) => {
-        console.log("Setting selected account:", account);
         setSelectedAccount(account);
     };
 
+    const handleSetIsAuthenticated = (isAuthenticated: boolean | null) => {
+        setIsAuthenticated(isAuthenticated);
+    };
 
     return (
-        <AccountContext.Provider value={{ accounts, selectedAccount, setSelectedAccount: handleSetSelectedAccount, setAccounts: handleSetAccounts }}>
+        <AccountContext.Provider value={{ accounts, selectedAccount, isAuthenticated, setIsAuthenticated: handleSetIsAuthenticated, setSelectedAccount: handleSetSelectedAccount, setAccounts: handleSetAccounts }}>
             {children}
         </AccountContext.Provider>
     );

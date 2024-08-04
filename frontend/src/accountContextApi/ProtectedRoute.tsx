@@ -4,7 +4,7 @@ import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 
 const checkTokenValidity = async (token: string) => {
     try {
-        const response = await axios.get('http://localhost:8080/api/v1/auth/validateToken', {
+        const response = await axios.get('${process.env.REACT_APP_API_URL}/api/v1/auth/validateToken', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

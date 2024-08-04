@@ -1,10 +1,16 @@
 import React from 'react';
 import { Button, Menu, MenuItem, Divider } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useNavigate } from 'react-router-dom';
+import { useAccountContext } from '../../accountContextApi/AccountContext';
 
 const DropdownSendMoney: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+  const { setIsAuthenticated } = useAccountContext();
+
+
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -12,6 +18,12 @@ const DropdownSendMoney: React.FC = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleNavigation = (path: string) => () => {
+    handleClose();
+    setIsAuthenticated(null);
+    navigate(path);
   };
 
   return (
@@ -37,7 +49,7 @@ const DropdownSendMoney: React.FC = () => {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem component="a" href="/home/payment">
+        <MenuItem onClick={handleNavigation('/home/payment')}>
           Tuzemská platba
         </MenuItem>
         <MenuItem onClick={handleClose} disableRipple>

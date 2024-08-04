@@ -58,7 +58,7 @@ const AccountMenu: React.FC = () => {
                     )}
                 >
                     <MenuItem value={ALL_ACCOUNTS_ID}>Všechny účty</MenuItem>
-                    {accounts.map((account) => (
+                    {Array.isArray(accounts) && accounts.map((account) => (
                         <MenuItem key={account.id} value={account.id}>
                             {account.name}
                         </MenuItem>

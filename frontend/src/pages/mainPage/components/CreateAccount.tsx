@@ -4,7 +4,7 @@ import { Button, FormControl, InputLabel, MenuItem, Paper, Select, TextField, Ty
 import { SelectChangeEvent } from '@mui/material/Select';
 import { Container } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
-import { AccountType } from '../../../accountContextApi/AccountContext';
+import { AccountType, useAccountContext } from '../../../accountContextApi/AccountContext';
 
 export interface BankAccount {
     id?: number;
@@ -24,6 +24,7 @@ const CreateAccountForm: React.FC = () => {
         accountType: AccountType.CHECKING,
     });
     const navigate = useNavigate();
+    const { setIsAuthenticated } = useAccountContext();
 
 
     const handleTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,25 +36,36 @@ const CreateAccountForm: React.FC = () => {
         setNewAccount({ ...newAccount, accountType: event.target.value as AccountType });
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const accountToSubmit = { ...newAccount };
         const token = localStorage.getItem('token');
 
         if (token) {
-            axios.post('http://localhost:8080/api/v1/auth/account/create', accountToSubmit, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-                .catch(error => {
-                    alert(error + ": " + "Chyba při vatváření účtu")
+            console.log(token);
+            try {
+                await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/auth/account/create`, accountToSubmit, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 });
-            alert("Váš účet byl úspěšně vytvořen.")
-            navigate("/home/accountsInfo");
+
+                alert("Váš účet byl úspěšně vytvořen.");
+                setIsAuthenticated(null);
+                navigate("/home/accountsInfo");
+            } catch (error: unknown) {
+                if (axios.isAxiosError(error)) {
+                    alert("Chyba při vytváření účtu: " + (error.response?.data?.message || error.message));
+                } else if (error instanceof Error) {
+                    alert("Chyba při vytváření účtu: " + error.message);
+                } else {
+                    alert("Chyba při vytváření účtu: Neznámá chyba.");
+                }
+            }
         } else {
             console.error('No token found. Please log in.');
+            alert('Chyba: Uživatelský token není dostupný. Prosím přihlaste se.');
         }
     };
 

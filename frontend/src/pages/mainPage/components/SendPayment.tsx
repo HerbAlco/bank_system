@@ -15,6 +15,7 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import axios from 'axios';
 import { useAccountContext } from '../../../accountContextApi/AccountContext';
+import { useNavigate } from 'react-router-dom';
 
 interface SendMoneyForm {
     accountNumber: string;
@@ -25,7 +26,7 @@ interface SendMoneyForm {
 }
 
 const SendPayment: React.FC = () => {
-    const { selectedAccount, accounts, setSelectedAccount } = useAccountContext();
+    const { selectedAccount, accounts, setSelectedAccount, setIsAuthenticated } = useAccountContext();
     const [form, setForm] = useState<SendMoneyForm>({
         accountNumber: selectedAccount?.accountNumber || '',
         toAccountNumber: '',
@@ -33,6 +34,8 @@ const SendPayment: React.FC = () => {
         note: '',
         symbol: '',
     });
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         if (selectedAccount) {
@@ -88,7 +91,7 @@ const SendPayment: React.FC = () => {
 
         try {
             await axios.post(
-                'http://localhost:8080/api/v1/auth/account/processTransaction',
+                `${process.env.REACT_APP_API_URL}/api/v1/auth/account/processTransaction`,
                 transactionData,
                 {
                     headers: {
@@ -96,6 +99,9 @@ const SendPayment: React.FC = () => {
                     },
                 }
             );
+
+            setIsAuthenticated(null);
+            navigate("/home/accountsInfo");
             alert('Platba úspěšně odeslána');
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {

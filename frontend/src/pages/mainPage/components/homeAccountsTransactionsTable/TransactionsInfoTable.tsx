@@ -18,7 +18,7 @@ export const getTransTypeDescription = (transType: string): string => {
 
 const fetchTransactions = async (accountId: number, token: string): Promise<Transaction[]> => {
   try {
-    const response = await axios.get(`http://localhost:8080/api/v1/auth/account/get/${accountId}`, {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/auth/account/get/${accountId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
