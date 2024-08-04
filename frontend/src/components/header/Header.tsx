@@ -1,12 +1,12 @@
 import { AppBar, Box, Button, CssBaseline, Toolbar, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAccountContext } from '../../accountContextApi/AccountContext';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const isLoggedIn = localStorage.getItem('token') !== null;
   const { setSelectedAccount } = useAccountContext();
-
 
   const handleLogout = () => {
     console.log('Odhlášení uživatele');
@@ -15,6 +15,13 @@ const Header: React.FC = () => {
     localStorage.removeItem('selectedAccountID');
     navigate('/login');
   };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
+
+  const isLoginPage = location.pathname === '/login';
+  const isRegisterPage = location.pathname === '/register';
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -30,14 +37,19 @@ const Header: React.FC = () => {
           </Typography>
           <Box>
             {isLoggedIn ? (
-              <Button key="Odhlásit se" sx={{ color: '#fff' }} onClick={() => handleLogout()}>
+              <Button key="Odhlásit se" sx={{ color: '#fff' }} onClick={handleLogout}>
                 Odhlásit se
               </Button>
             ) : (
-              <Button key="Přihlásit se" sx={{ color: '#fff' }} onClick={() => navigate('/login')}>
-                Přihlásit se
-              </Button>
-            )}
+              isLoginPage ? (
+                <Button key="Registrace" sx={{ color: '#fff' }} onClick={() => handleNavigation('/register')}>
+                  Registrace
+                </Button>
+              ) : (
+                <Button key="Přihlásit se" sx={{ color: '#fff' }} onClick={() => handleNavigation('/login')}>
+                  Přihlásit se
+                </Button>
+              ))}
           </Box>
         </Toolbar>
       </AppBar>

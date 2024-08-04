@@ -5,10 +5,12 @@ import {
   Container,
   CssBaseline,
   Grid,
+  IconButton,
+  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
-import { LockOutlined } from "@mui/icons-material";
+import { LockOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -21,6 +23,9 @@ const Register = () => {
     password: "",
   });
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
@@ -55,7 +60,7 @@ const Register = () => {
           <Avatar sx={{ m: 1, bgcolor: "primary.light" }}>
             <LockOutlined />
           </Avatar>
-          <Typography variant="h5">Register</Typography>
+          <Typography variant="h5">Registrace</Typography>
           <Box sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -64,7 +69,7 @@ const Register = () => {
                   required
                   fullWidth
                   id="firstname"
-                  label="First Name"
+                  label="Jméno"
                   autoFocus
                   value={formData.firstname}
                   onChange={handleChange}
@@ -76,7 +81,7 @@ const Register = () => {
                   required
                   fullWidth
                   id="lastname"
-                  label="Last Name"
+                  label="Příjmení"
                   name="lastname"
                   value={formData.lastname}
                   onChange={handleChange}
@@ -88,7 +93,7 @@ const Register = () => {
                   required
                   fullWidth
                   id="email"
-                  label="Email Address"
+                  label="Email@"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
@@ -99,11 +104,25 @@ const Register = () => {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
-                  type="password"
+                  label="Heslo"
+                  type={showPassword ? "text" : "password"}
                   id="password"
                   value={formData.password}
                   onChange={handleChange}
+                  variant="outlined"
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                        >
+                          {showPassword ? <Visibility /> : <VisibilityOff />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
                 />
               </Grid>
             </Grid>
@@ -113,11 +132,11 @@ const Register = () => {
               sx={{ mt: 3, mb: 2 }}
               onClick={handleRegister}
             >
-              Register
+              Registrace
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link to="/login">Already have an account? Login</Link>
+                <Link to="/login">Už máte vytvořený účet? Přihlášení</Link>
               </Grid>
             </Grid>
           </Box>

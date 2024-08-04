@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { Container } from '@mui/material';
 import Navbar from '../../components/navbar/Navbar';
 import axios from 'axios';
