@@ -1,7 +1,9 @@
 package com.bank.banksystem.auth;
 
 
+import com.bank.banksystem.exceptions.UserAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +15,13 @@ public class AuthController {
 	private final AuthService service;
 
 	@PostMapping("/register")
-	public ResponseEntity<AuthResponse> register(
-		@RequestBody RegisterRequest request
-	){
-		return ResponseEntity.ok(service.register(request));
+	public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+		try {
+			AuthResponse response = service.register(request);
+			return ResponseEntity.ok(response);
+		} catch (UserAlreadyExistsException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+		}
 	}
 
 	@PostMapping("/authenticate")

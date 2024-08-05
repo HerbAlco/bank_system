@@ -23,8 +23,6 @@ const Home: React.FC = () => {
             }
           });
 
-          console.log('API response data:', response.data);
-
           const accounts = Array.isArray(response.data) ?
             response.data.sort((a: { id: number }, b: { id: number }) => a.id - b.id) :
             [];

@@ -1,4 +1,5 @@
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -24,6 +25,7 @@ const Register = () => {
   });
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
@@ -36,15 +38,23 @@ const Register = () => {
   };
 
   const handleRegister = async () => {
+    setError(null);
     try {
       await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/auth/register`, formData);
       alert("Uspěšně jste se registroval")
       navigate("/login");
-    } catch (error) {
-      alert("Chyba při registraci:")
-      console.error("Chyba při registraci:", error);
-    }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        if (error.response && error.response.status === 409) {
+          setError(error.response.data);
+        } else {
+          alert('An error occurred. Please try again.');
+        }
+      }
+    };
   };
+
+
 
   return (
     <>
@@ -87,7 +97,6 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Grid>
-
               <Grid item xs={12}>
                 <TextField
                   required
@@ -98,6 +107,7 @@ const Register = () => {
                   value={formData.email}
                   onChange={handleChange}
                 />
+                {error && <Alert severity="error">{error}</Alert>}
               </Grid>
               <Grid item xs={12}>
                 <TextField

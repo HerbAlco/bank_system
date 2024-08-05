@@ -55,7 +55,9 @@ const AccountsInfoTable: React.FC = () => {
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
+                                <TableCell>Název účtu</TableCell>
                                 <TableCell>Číslo účtu</TableCell>
+                                <TableCell>Majitel</TableCell>
                                 <TableCell>Zůstatek</TableCell>
                                 <TableCell>Typ účtu</TableCell>
                             </TableRow>
@@ -77,7 +79,9 @@ const AccountsInfoTable: React.FC = () => {
                                         onClick={() => handleRowClick(account)}
                                         selected={selectedAccount?.id === account.id}
                                     >
+                                        <TableCell>{account.name}</TableCell>
                                         <TableCell>{account.accountNumber}</TableCell>
+                                        <TableCell>{ }</TableCell>
                                         <TableCell
                                             style={{
                                                 fontWeight: 'bold'

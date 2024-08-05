@@ -44,7 +44,7 @@ interface AccountProviderProps {
 export const AccountProvider: React.FC<AccountProviderProps> = ({ children }) => {
     const [accounts, setAccounts] = useState<AccountData[]>([]);
     const [selectedAccount, setSelectedAccount] = useState<AccountData | null>(null);
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null); // Přidání isAuthenticated
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
     const handleSetAccounts = (accounts: AccountData[]) => {
         setAccounts(accounts);

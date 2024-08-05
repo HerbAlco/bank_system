@@ -46,9 +46,6 @@ const LoginPage = () => {
     setLoading(true);
     setError(null);
     try {
-      console.log('API URL:', process.env.REACT_APP_API_URL);
-
-
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/auth/authenticate`, {
         username,
         password,
@@ -80,8 +77,8 @@ const LoginPage = () => {
               required
               fullWidth
               id="username"
-              label="Přihlašovací jméno"
-              name="Přihlašovací jméno"
+              label="Email"
+              name="Email"
               autoFocus
               value={username}
               onChange={(e) => setUsername(e.target.value)}

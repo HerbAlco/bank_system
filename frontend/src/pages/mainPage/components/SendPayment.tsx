@@ -106,17 +106,16 @@ const SendPayment: React.FC = () => {
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
                 if (error.response) {
-                    const message = error.response.data;
-                    alert(`${message}`);
+                    alert(`${error.response.data}`);
                 } else if (error.request) {
-                    alert('No response received from server.');
+                    alert('Server neodpovídá');
                 } else {
                     alert('Error: ' + error.message);
                 }
             } else if (error instanceof Error) {
                 alert('Error: ' + error.message);
             } else {
-                alert('An unexpected error occurred.');
+                alert('Neočekávaná chyba');
             }
         }
 
