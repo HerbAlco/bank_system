@@ -45,9 +45,12 @@ const LoginPage = () => {
   const handleLogin = async () => {
     setLoading(true);
     setError(null);
+
+    const normalizedUsername = username.toLowerCase();
+
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/auth/authenticate`, {
-        username,
+        username: normalizedUsername,
         password,
       });
       const token = response.data.token;
