@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useAccountContext } from '../../accountContextApi/AccountContext';
+import { AccountData, useAccountContext, User } from '../../accountContextApi/AccountContext';
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -24,19 +24,25 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { setAccounts } = useAccountContext();
+  const { setAccounts, setUser } = useAccountContext();
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   const fetchAccountData = async (token: string) => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/auth/user/getcurrentaccounts`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/auth/user/getcurrentuser`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
-      setAccounts(response.data);
+
+      const userData: User & { accounts: AccountData[] } = response.data;
+      const { id, firstName, lastName, email, username, password, birthDate, address, phoneNumber, role, accounts } = userData;
+
+      setUser({ id, firstName, lastName, email, username, password, birthDate, address, phoneNumber, role });
+      setAccounts(accounts);
+
     } catch (error) {
       console.error("Chyba při načítání účtů:", error);
     }

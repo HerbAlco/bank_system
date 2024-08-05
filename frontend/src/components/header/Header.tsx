@@ -6,13 +6,13 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isLoggedIn = localStorage.getItem('token') !== null;
-  const { setSelectedAccount } = useAccountContext();
+  const { setSelectedAccount, setSelectedAccountId } = useAccountContext();
 
   const handleLogout = () => {
     console.log('Odhlášení uživatele');
     setSelectedAccount(null);
+    setSelectedAccountId(null);
     localStorage.removeItem('token');
-    localStorage.removeItem('selectedAccountID');
     navigate('/login');
   };
 

@@ -1,6 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, MenuItem, Button, Box } from '@mui/material';
-import { AccountCircle } from '@mui/icons-material';
+import { AppBar, Toolbar, MenuItem, Box } from '@mui/material';
 import AccountMenu from './DropdownAccountMenu';
 import DropdownSendMoney from './DropdownSendMoney';
 import DropdownView from './DropdownVeiw';
@@ -10,7 +9,7 @@ import { useAccountContext } from '../../accountContextApi/AccountContext';
 const Navbar: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const { setIsAuthenticated } = useAccountContext();
+  const { setIsAuthenticated, user } = useAccountContext();
 
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -34,9 +33,14 @@ const Navbar: React.FC = () => {
           <MenuItem >Šablony</MenuItem>
           <Box sx={{ flexGrow: 1 }} />
           <MenuItem onClick={handleNavigation('/home/accountDetails')}>Informace o účtě</MenuItem>
-          <Button color="inherit" onClick={handleClick}>
-            <AccountCircle ></AccountCircle>
-          </Button>
+          <div>
+            <div>
+              {user?.firstName} {user?.lastName}
+            </div>
+            <MenuItem onClick={handleNavigation('/home/userDetails')}>
+              Nastavení
+            </MenuItem>
+          </div>
         </Toolbar>
       </AppBar>
     </Box>

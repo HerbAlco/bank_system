@@ -26,7 +26,7 @@ interface SendMoneyForm {
 }
 
 const SendPayment: React.FC = () => {
-    const { selectedAccount, accounts, setSelectedAccount, setIsAuthenticated } = useAccountContext();
+    const { selectedAccount, accounts, setSelectedAccount, setSelectedAccountId, setIsAuthenticated } = useAccountContext();
     const [form, setForm] = useState<SendMoneyForm>({
         accountNumber: selectedAccount?.accountNumber || '',
         toAccountNumber: '',
@@ -64,7 +64,7 @@ const SendPayment: React.FC = () => {
 
         const selectedAccount = accounts.find(account => account.accountNumber === accountNumber);
         if (selectedAccount) {
-            localStorage.setItem('selectedAccountID', String(selectedAccount?.id));
+            setSelectedAccountId(selectedAccount.id);
             setSelectedAccount(selectedAccount);
         } else {
             setSelectedAccount(null);

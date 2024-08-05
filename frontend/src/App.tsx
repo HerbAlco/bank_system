@@ -9,6 +9,7 @@ import SendPayment from './pages/mainPage/components/SendPayment';
 import Home from './pages/mainPage/Home';
 import AccountDetails from './pages/mainPage/components/AccountDetails';
 import ProtectedRoute from './accountContextApi/ProtectedRoute';
+import UserDetails from './pages/mainPage/components/UserDetails';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
               <Route path="accountsInfo" element={<AccountsInfoTable />} />
               <Route path="payment" element={<SendPayment />} />
               <Route path='accountDetails' element={<AccountDetails />} />
+              <Route path='userDetails' element={<UserDetails />} />
             </Route>
           </Route>
         </Routes>

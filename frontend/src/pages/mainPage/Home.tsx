@@ -7,7 +7,7 @@ import { useAccountContext } from '../../accountContextApi/AccountContext';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const { setAccounts, setSelectedAccount, setIsAuthenticated, isAuthenticated } = useAccountContext();
+  const { setAccounts, setSelectedAccount, setIsAuthenticated, isAuthenticated, selectedAccountId } = useAccountContext();
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -29,10 +29,7 @@ const Home: React.FC = () => {
 
           setAccounts(accounts);
 
-          const selectedAccountID = localStorage.getItem('selectedAccountID');
-          const id = selectedAccountID ? parseInt(selectedAccountID, 10) : null;
-
-          const account = accounts.find((acc: { id: number | null }) => acc.id === id);
+          const account = accounts.find((acc: { id: number | null }) => acc.id === selectedAccountId);
           setSelectedAccount(account || null);
 
         } catch (error) {

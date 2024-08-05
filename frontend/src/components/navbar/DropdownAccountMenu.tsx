@@ -17,8 +17,7 @@ const CustomSelect = styled(Select)({
 });
 
 const AccountMenu: React.FC = () => {
-    const { accounts, setSelectedAccount, selectedAccount } = useAccountContext();
-    const [selectedAccountId, setSelectedAccountId] = React.useState<number>(ALL_ACCOUNTS_ID);
+    const { accounts, setSelectedAccount, selectedAccount, selectedAccountId, setSelectedAccountId } = useAccountContext();
 
     useEffect(() => {
         if (selectedAccount) {
@@ -34,12 +33,12 @@ const AccountMenu: React.FC = () => {
 
         if (accountId === ALL_ACCOUNTS_ID) {
             setSelectedAccount(null);
-            localStorage.removeItem('selectedAccountID');
+            setSelectedAccountId(null);
         } else {
             const selectedAccount = accounts.find(account => account.id === accountId);
             if (selectedAccount) {
                 setSelectedAccount(selectedAccount);
-                localStorage.setItem('selectedAccountID', String(selectedAccount?.id));
+                setSelectedAccountId(selectedAccount.id);
             }
         }
     };

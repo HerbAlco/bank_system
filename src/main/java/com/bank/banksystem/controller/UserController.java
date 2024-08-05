@@ -8,6 +8,7 @@ import com.bank.banksystem.service.implService.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -125,7 +126,6 @@ public class UserController
 	@GetMapping("/getcurrentaccounts")
 	public ResponseEntity<List<BankAccount>> getCurrentAccounts()
 	{
-
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		List<BankAccount> accounts = accountService.getAllAccountByUsername(username);
 
@@ -137,6 +137,11 @@ public class UserController
 		{
 			return ResponseEntity.noContent().build();
 		}
-
+	}
+	@GetMapping("/getcurrentuser")
+	public ResponseEntity<User> getCurrentUser(@RequestHeader("Authorization") String authorizationHeader){
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		var currentUser = userService.getUserByEmail(username);
+		return currentUser.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
 }

@@ -10,13 +10,13 @@ const accountTypeTranslations: { [key: string]: string } = {
 };
 
 const AccountsInfoTable: React.FC = () => {
-    const { accounts, selectedAccount, setSelectedAccount } = useAccountContext();
+    const { accounts, selectedAccount, setSelectedAccount, setSelectedAccountId } = useAccountContext();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
     const handleRowClick = (account: AccountData) => {
         setSelectedAccount(account);
-        localStorage.setItem('selectedAccountID', String(account.id));
+        setSelectedAccountId(account.id);
     };
 
     useEffect(() => {
