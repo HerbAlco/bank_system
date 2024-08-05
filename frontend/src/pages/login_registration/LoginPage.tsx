@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LockOutlined } from "@mui/icons-material";
+import { LockOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Container,
   CssBaseline,
@@ -10,7 +10,9 @@ import {
   Button,
   Grid,
   CircularProgress,
-  Alert
+  Alert,
+  IconButton,
+  InputAdornment
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -23,6 +25,9 @@ const LoginPage = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { setAccounts } = useAccountContext();
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   const fetchAccountData = async (token: string) => {
     try {
@@ -67,7 +72,7 @@ const LoginPage = () => {
           <Avatar sx={{ m: 1, bgcolor: "primary.light" }}>
             <LockOutlined />
           </Avatar>
-          <Typography variant="h5">Login</Typography>
+          <Typography variant="h5">Přihlášení</Typography>
           <Box sx={{ mt: 1 }}>
             {error && <Alert severity="error">{error}</Alert>}
             <TextField
@@ -75,8 +80,8 @@ const LoginPage = () => {
               required
               fullWidth
               id="username"
-              label="Username"
-              name="username"
+              label="Přihlašovací jméno"
+              name="Přihlašovací jméno"
               autoFocus
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -86,11 +91,24 @@ const LoginPage = () => {
               required
               fullWidth
               id="password"
-              name="password"
-              label="Password"
-              type="password"
+              name="Heslo"
+              label="Heslo"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
             />
             <Button
               fullWidth
@@ -99,11 +117,11 @@ const LoginPage = () => {
               onClick={handleLogin}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={24} /> : 'Login'}
+              {loading ? <CircularProgress size={24} /> : 'Přihlásit se'}
             </Button>
             <Grid container justifyContent={"flex-end"}>
               <Grid item>
-                <Link to="/register">Don't have an account? Register</Link>
+                <Link to="/register">Nejste registrovaní? Registrace</Link>
               </Grid>
             </Grid>
           </Box>

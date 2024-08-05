@@ -36,7 +36,7 @@ const Header: React.FC = () => {
             Bankovní systém
           </Typography>
           <Box>
-            {isLoggedIn ? (
+            {isLoggedIn && !isLoginPage && !isRegisterPage ? (
               <Button key="Odhlásit se" sx={{ color: '#fff' }} onClick={handleLogout}>
                 Odhlásit se
               </Button>
