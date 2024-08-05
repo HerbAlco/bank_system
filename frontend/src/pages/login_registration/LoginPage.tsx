@@ -38,9 +38,9 @@ const LoginPage = () => {
       });
 
       const userData: User & { accounts: AccountData[] } = response.data;
-      const { id, firstName, lastName, email, username, password, birthDate, address, phoneNumber, role, accounts } = userData;
+      const { id, firstName, lastName, email, username, birthDate, address, phoneNumber, role, accounts } = userData;
 
-      setUser({ id, firstName, lastName, email, username, password, birthDate, address, phoneNumber, role });
+      setUser({ id, firstName, lastName, email, username, birthDate, address, phoneNumber, role });
       setAccounts(accounts);
 
     } catch (error) {

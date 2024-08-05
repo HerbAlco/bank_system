@@ -33,14 +33,9 @@ const Navbar: React.FC = () => {
           <MenuItem >Šablony</MenuItem>
           <Box sx={{ flexGrow: 1 }} />
           <MenuItem onClick={handleNavigation('/home/accountDetails')}>Informace o účtě</MenuItem>
-          <div>
-            <div>
-              {user?.firstName} {user?.lastName}
-            </div>
-            <MenuItem onClick={handleNavigation('/home/userDetails')}>
-              Nastavení
-            </MenuItem>
-          </div>
+          <MenuItem onClick={handleNavigation('/home/userDetails')}>
+            {user?.lastName} {user?.firstName}
+          </MenuItem>
         </Toolbar>
       </AppBar>
     </Box>

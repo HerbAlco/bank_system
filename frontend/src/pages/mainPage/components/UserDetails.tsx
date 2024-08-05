@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Typography, Grid } from '@mui/material';
@@ -7,52 +7,35 @@ import { useNavigate } from 'react-router-dom';
 
 const UserDetails: React.FC = () => {
     const navigate = useNavigate();
-    const { user, setUser } = useAccountContext();
+    const { user } = useAccountContext();
 
     const { control, handleSubmit, setValue, formState: { errors } } = useForm<User>({
         defaultValues: {
-            id: 0,
             firstName: '',
             lastName: '',
             email: '',
-            username: '',
-            password: '',
             birthDate: '',
-            address: '',
+            address: { street: '', city: '', postalCode: '', state: '' },
             phoneNumber: '',
-            role: ''
         }
     });
 
     useEffect(() => {
         const fetchUser = async () => {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                navigate('/login');
-            } else {
-                try {
-                    const response = await axios.get<User>(`${process.env.REACT_APP_API_URL}/api/v1/auth/user/getcurrentuser`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-                    setUser(response.data);
-                    for (const [key, value] of Object.entries(response.data)) {
-                        setValue(key as keyof User, value);
-                    }
-                } catch (error) {
-                    console.error('Error fetching user data:', error);
+            if (user) {
+                for (const [key, value] of Object.entries(user)) {
+                    setValue(key as keyof User, value);
                 }
             }
-        };
-
+        }
         fetchUser();
-    }, [setValue]);
+    }, [setValue, user]);
 
     const onSubmit = async (data: User) => {
         try {
             await axios.put(`${process.env.REACT_APP_API_URL}/api/v1/auth/user/update/${data.id}`, data);
             alert('User details updated successfully!');
+            navigate("/home/userDetails");
         } catch (error) {
             console.error('Error updating user data:', error);
         }
@@ -65,7 +48,7 @@ const UserDetails: React.FC = () => {
     return (
         <div>
             <Typography variant="h4" gutterBottom>
-                User Details
+                Vaše osobní údaje
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container spacing={2}>
@@ -76,7 +59,7 @@ const UserDetails: React.FC = () => {
                             render={({ field }) => (
                                 <TextField
                                     {...field}
-                                    label="First Name"
+                                    label="Jméno"
                                     fullWidth
                                     error={!!errors.firstName}
                                     helperText={errors.firstName ? errors.firstName.message : ''}
@@ -91,7 +74,7 @@ const UserDetails: React.FC = () => {
                             render={({ field }) => (
                                 <TextField
                                     {...field}
-                                    label="Last Name"
+                                    label="Příjmení"
                                     fullWidth
                                     error={!!errors.lastName}
                                     helperText={errors.lastName ? errors.lastName.message : ''}
@@ -116,43 +99,12 @@ const UserDetails: React.FC = () => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Controller
-                            name="username"
-                            control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Username"
-                                    fullWidth
-                                    error={!!errors.username}
-                                    helperText={errors.username ? errors.username.message : ''}
-                                />
-                            )}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Controller
-                            name="password"
-                            control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Password"
-                                    type="password"
-                                    fullWidth
-                                    error={!!errors.password}
-                                    helperText={errors.password ? errors.password.message : ''}
-                                />
-                            )}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Controller
                             name="birthDate"
                             control={control}
                             render={({ field }) => (
                                 <TextField
                                     {...field}
-                                    label="Birth Date"
+                                    label="Datum narození"
                                     type="date"
                                     InputLabelProps={{ shrink: true }}
                                     fullWidth
@@ -164,15 +116,60 @@ const UserDetails: React.FC = () => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <Controller
-                            name="address"
+                            name="address.city"
                             control={control}
                             render={({ field }) => (
                                 <TextField
                                     {...field}
-                                    label="Address"
+                                    label="Město"
                                     fullWidth
-                                    error={!!errors.address}
-                                    helperText={errors.address ? errors.address.message : ''}
+                                    error={!!errors.address?.city}
+                                    helperText={errors.address?.city ? errors.address.city.message : ''}
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Controller
+                            name="address.postalCode"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    label="PSČ"
+                                    fullWidth
+                                    error={!!errors.address?.postalCode}
+                                    helperText={errors.address?.postalCode ? errors.address.postalCode.message : ''}
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Controller
+                            name="address.street"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    label="Ulice"
+                                    fullWidth
+                                    error={!!errors.address?.street}
+                                    helperText={errors.address?.street ? errors.address.street.message : ''}
+                                />
+                            )}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Controller
+                            name="address.state"
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    label="Stát"
+                                    fullWidth
+                                    error={!!errors.address?.state}
+                                    helperText={errors.address?.state ? errors.address.state.message : ''}
                                 />
                             )}
                         />
@@ -184,7 +181,7 @@ const UserDetails: React.FC = () => {
                             render={({ field }) => (
                                 <TextField
                                     {...field}
-                                    label="Phone Number"
+                                    label="Tel. číslo"
                                     fullWidth
                                     error={!!errors.phoneNumber}
                                     helperText={errors.phoneNumber ? errors.phoneNumber.message : ''}
@@ -192,24 +189,9 @@ const UserDetails: React.FC = () => {
                             )}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Controller
-                            name="role"
-                            control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    label="Role"
-                                    fullWidth
-                                    error={!!errors.role}
-                                    helperText={errors.role ? errors.role.message : ''}
-                                />
-                            )}
-                        />
-                    </Grid>
                     <Grid item xs={12}>
                         <Button type="submit" variant="contained" color="primary">
-                            Save Changes
+                            Uložit změny
                         </Button>
                     </Grid>
                 </Grid>

@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { Container } from '@mui/material';
-import Navbar from '../../components/navbar/Navbar';
 import axios from 'axios';
-import { useAccountContext } from '../../accountContextApi/AccountContext';
+import { AccountData, useAccountContext, User } from '../../accountContextApi/AccountContext';
+import { Container } from '@mui/system';
+import Navbar from '../../components/navbar/Navbar';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const { setAccounts, setSelectedAccount, setIsAuthenticated, isAuthenticated, selectedAccountId } = useAccountContext();
+  const { setAccounts, setSelectedAccount, setIsAuthenticated, setUser, isAuthenticated, selectedAccountId } = useAccountContext();
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -17,23 +17,27 @@ const Home: React.FC = () => {
       } else {
         setIsAuthenticated(true);
         try {
-          const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/auth/user/getcurrentaccounts`, {
+          const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/auth/user/getcurrentuser`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
           });
 
-          const accounts = Array.isArray(response.data) ?
-            response.data.sort((a: { id: number }, b: { id: number }) => a.id - b.id) :
+          const userData: User & { accounts: AccountData[] } = response.data;
+          const { id, firstName, lastName, email, username, birthDate, address, phoneNumber, role, accounts } = userData;
+
+          setUser({ id, firstName, lastName, email, username, birthDate, address, phoneNumber, role });
+
+          const sortedAccounts = Array.isArray(accounts) ?
+            accounts.sort((a, b) => a.id - b.id) :
             [];
+          setAccounts(sortedAccounts);
 
-          setAccounts(accounts);
-
-          const account = accounts.find((acc: { id: number | null }) => acc.id === selectedAccountId);
+          const account = sortedAccounts.find(acc => acc.id === selectedAccountId);
           setSelectedAccount(account || null);
 
         } catch (error) {
-          console.error("Chyba při načítání účtů:", error);
+          console.error("Chyba při načítání uživatelských dat:", error);
         }
       }
     };

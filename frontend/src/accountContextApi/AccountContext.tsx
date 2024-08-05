@@ -17,11 +17,17 @@ export interface User {
     lastName: string;
     email: string;
     username: string;
-    password: string;
     birthDate: string | null;
-    address: string | null;
+    address: Address;
     phoneNumber: string | null;
     role: string;
+}
+
+interface Address {
+    street: string;
+    city: string;
+    postalCode: string;
+    state: string;
 }
 
 export enum AccountType {
