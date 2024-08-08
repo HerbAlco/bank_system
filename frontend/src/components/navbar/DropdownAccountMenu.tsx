@@ -5,8 +5,6 @@ import { SelectChangeEvent } from '@mui/material/Select';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 
-const ALL_ACCOUNTS_ID = -1;
-
 const CustomSelect = styled(Select)({
     '& .MuiSelect-icon': {
         color: 'white',
@@ -22,24 +20,18 @@ const AccountMenu: React.FC = () => {
     useEffect(() => {
         if (selectedAccount) {
             setSelectedAccountId(selectedAccount.id);
-        } else {
-            setSelectedAccountId(ALL_ACCOUNTS_ID);
         }
-    }, [selectedAccount]);
+    }, [selectedAccount, setSelectedAccountId]);
 
-    const handleChange = (event: SelectChangeEvent<unknown>) => {
+    const handleChange = (event: SelectChangeEvent<number | unknown>) => {
         const accountId = event.target.value as number;
         setSelectedAccountId(accountId);
 
-        if (accountId === ALL_ACCOUNTS_ID) {
+        if (accountId === selectedAccountId) {
             setSelectedAccount(null);
-            setSelectedAccountId(null);
         } else {
-            const selectedAccount = accounts.find(account => account.id === accountId);
-            if (selectedAccount) {
-                setSelectedAccount(selectedAccount);
-                setSelectedAccountId(selectedAccount.id);
-            }
+            const selectedAccount = accounts.find(account => account.id === accountId) || null;
+            setSelectedAccount(selectedAccount);
         }
     };
 
@@ -49,14 +41,14 @@ const AccountMenu: React.FC = () => {
                 <CustomSelect
                     labelId="simple-select-label"
                     id="simple-select"
-                    value={selectedAccountId}
+                    value={selectedAccountId ?? 'Náhled'}
                     onChange={handleChange}
                     input={<OutlinedInput sx={{ color: 'white' }} />}
                     IconComponent={(props) => (
                         <KeyboardArrowDownIcon {...props} />
                     )}
                 >
-                    <MenuItem value={ALL_ACCOUNTS_ID}>Všechny účty</MenuItem>
+                    <MenuItem value='Náhled'>Náhled</MenuItem>
                     {Array.isArray(accounts) && accounts.map((account) => (
                         <MenuItem key={account.id} value={account.id}>
                             {account.name}

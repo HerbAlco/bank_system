@@ -1,6 +1,5 @@
 package com.bank.banksystem.controller;
 
-import com.bank.banksystem.config.JwtService;
 import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.entity.user_entity.User;
 import com.bank.banksystem.service.implService.AccountServiceImpl;
@@ -8,7 +7,6 @@ import com.bank.banksystem.service.implService.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;

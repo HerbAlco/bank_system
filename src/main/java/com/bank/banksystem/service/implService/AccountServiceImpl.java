@@ -1,18 +1,24 @@
 package com.bank.banksystem.service.implService;
 
+import com.bank.banksystem.BankSystemApplication;
 import com.bank.banksystem.controller.transRequest.TransRequest;
 import com.bank.banksystem.entity.bank_account_entity.BankAccount;
+import com.bank.banksystem.entity.transaction_entity.TransType;
 import com.bank.banksystem.entity.transaction_entity.Transaction;
+import com.bank.banksystem.entity.user_entity.User;
 import com.bank.banksystem.exceptions.InsufficientFundsException;
 import com.bank.banksystem.repository.AccountRepository;
 import com.bank.banksystem.service.AbstractService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -20,11 +26,14 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 {
 
 	private final TransactionServiceImpl transactionService;
+	private final UserServiceImpl userService;
 
 	@Autowired
-	public AccountServiceImpl(AccountRepository repository, TransactionServiceImpl transactionService)
+	public AccountServiceImpl(AccountRepository repository, TransactionServiceImpl transactionService,
+		UserServiceImpl userService)
 	{
 		super(repository);
+		this.userService = userService;
 		this.transactionService = transactionService;
 	}
 
@@ -33,8 +42,10 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 	public BankAccount save(BankAccount account)
 	{
 		if (account.getAccountNumber() == null)
+		{
 			account.setAccountNumber(generateUniqueAccountNumber());
-
+			account.setBalance(BigDecimal.valueOf(100000));
+		}
 		return super.save(account);
 	}
 
@@ -126,4 +137,36 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 	{
 		return super.findAll().stream().filter(account -> account.getUser().getUsername().equals(username)).toList();
 	}
+
+	@Scheduled(cron = "0 0 14 * * ?")
+	public void addDailySalary()
+	{
+
+		List<User> users = userService.findAll();
+		BigDecimal salary = BigDecimal.valueOf(1500);
+		Optional<BankAccount> salaryAccount = repository.findById(1L);
+
+		for (User user : users)
+		{
+			List<BankAccount> accounts = ((AccountRepository)repository).findAccountsByUserId(user.getId());
+
+			if (!accounts.isEmpty())
+			{
+				BankAccount firstAccount = accounts.get(0);
+
+				Transaction transaction = new Transaction();
+				transaction.setAccount(firstAccount);
+				transaction.setToAccount(salaryAccount.get());
+				transaction.setAmount(salary);
+				transaction.setTransType(TransType.TRANSFER);
+				transaction.setNote("Vaše výplata");
+				transactionService.save(transaction);
+
+				firstAccount.setBalance(firstAccount.getBalance().add(salary));
+
+				repository.save(firstAccount);
+			}
+		}
+	}
+
 }
