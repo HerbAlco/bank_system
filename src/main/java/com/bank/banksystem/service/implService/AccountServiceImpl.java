@@ -1,7 +1,7 @@
 package com.bank.banksystem.service.implService;
 
-import com.bank.banksystem.BankSystemApplication;
 import com.bank.banksystem.controller.transRequest.TransRequest;
+import com.bank.banksystem.entity.bank_account_entity.AccountType;
 import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.entity.transaction_entity.TransType;
 import com.bank.banksystem.entity.transaction_entity.Transaction;
@@ -12,11 +12,11 @@ import com.bank.banksystem.service.AbstractService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -156,15 +156,45 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 
 				Transaction transaction = new Transaction();
 				transaction.setAccount(firstAccount);
-				transaction.setToAccount(salaryAccount.get());
 				transaction.setAmount(salary);
-				transaction.setTransType(TransType.TRANSFER);
+				transaction.setTransType(TransType.DEPOSIT);
 				transaction.setNote("Vaše výplata");
 				transactionService.save(transaction);
 
 				firstAccount.setBalance(firstAccount.getBalance().add(salary));
 
 				repository.save(firstAccount);
+			}
+		}
+	}
+
+	@Scheduled(cron = "0 0 14 * * ?")
+	public void addDailySavingBonus()
+	{
+
+		List<User> users = userService.findAll();
+
+		for (User user : users)
+		{
+			List<BankAccount> accounts = ((AccountRepository)repository).findAccountsByUserId(user.getId());
+
+			BankAccount savingAccount = accounts.stream()
+				.filter(bankAccount -> bankAccount.getAccountType() == AccountType.SAVINGS).findFirst().orElse(null);
+
+			if (savingAccount != null && savingAccount.getBalance().equals(BigDecimal.valueOf(0)))
+			{
+
+				BigDecimal percentage = new BigDecimal("4").divide(new BigDecimal("100"), MathContext.DECIMAL128);
+				Transaction transaction = new Transaction();
+				transaction.setAccount(savingAccount);
+				transaction.setAmount(savingAccount.getBalance().multiply(percentage));
+				transaction.setTransType(TransType.DEPOSIT);
+				transaction.setNote("Úroky z vkladu");
+				transactionService.save(transaction);
+
+				savingAccount.setBalance(savingAccount.getBalance().add(savingAccount.getBalance().multiply(percentage)));
+
+				repository.save(savingAccount);
 			}
 		}
 	}
