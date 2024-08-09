@@ -1,4 +1,3 @@
-# Použití oficiálního OpenJDK obrazu jako základního obrazu
 FROM openjdk:17-jdk-slim
 
 WORKDIR /app
