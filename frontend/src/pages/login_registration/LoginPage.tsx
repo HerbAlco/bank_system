@@ -91,6 +91,7 @@ const LoginPage = () => {
               label="Email"
               name="Email"
               autoFocus
+              autoComplete='email'
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -101,6 +102,7 @@ const LoginPage = () => {
               id="password"
               name="Heslo"
               label="Heslo"
+              autoComplete="current-password"
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
