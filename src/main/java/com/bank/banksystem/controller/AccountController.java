@@ -1,21 +1,17 @@
 package com.bank.banksystem.controller;
 
-import com.bank.banksystem.config.JwtService;
 import com.bank.banksystem.controller.transRequest.TransRequest;
 import com.bank.banksystem.entity.bank_account_entity.BankAccount;
-import com.bank.banksystem.entity.transaction_entity.Transaction;
-import com.bank.banksystem.entity.user_entity.User;
-import com.bank.banksystem.service.implService.AccountServiceImpl;
-import com.bank.banksystem.service.implService.UserServiceImpl;
+import com.bank.banksystem.exceptions.InsufficientFundsException;
+import com.bank.banksystem.service.AccountService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/auth/account")
@@ -23,31 +19,20 @@ import java.util.Optional;
 public class AccountController
 {
 
-	private final AccountServiceImpl accountService;
-	private final UserServiceImpl userService;
-	private final JwtService jwtService;
+	private final AccountService accountService;
 
 	@PostMapping("/create")
-	public ResponseEntity<?> createAccount(@RequestHeader("Authorization") String authorizationHeader,
-		@RequestBody BankAccount bankAccount)
+	public ResponseEntity<?> createAccount(@RequestBody BankAccount bankAccount)
 	{
 		try
 		{
-			String token = authorizationHeader.replace("Bearer ", "");
-			String currentUsername = jwtService.extractUsername(token);
-			Optional<User> currentUser = userService.getUserByEmail(currentUsername);
-
-			if (currentUser.isPresent())
-			{
-				bankAccount.setUser(currentUser.get());
-				bankAccount.setBalance(BigDecimal.valueOf(5000.00));
-				BankAccount savedBankAccount = accountService.save(bankAccount);
-				return new ResponseEntity<>(savedBankAccount, HttpStatus.CREATED);
-			}
-			else
-			{
-				return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
-			}
+			String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+			BankAccount savedBankAccount = accountService.createAccountForUser(currentUsername, bankAccount);
+			return new ResponseEntity<>(savedBankAccount, HttpStatus.CREATED);
+		}
+		catch (RuntimeException e)
+		{
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
 		}
 		catch (Exception e)
 		{
@@ -58,57 +43,53 @@ public class AccountController
 	@GetMapping("/get/{id}")
 	public ResponseEntity<BankAccount> getAccountById(@PathVariable Long id)
 	{
-		BankAccount bankAccount = accountService.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException("Bank account not found with id: " + id));
-		return ResponseEntity.ok(bankAccount);
+		return accountService.findById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@GetMapping("/getall")
 	public ResponseEntity<List<BankAccount>> getAllAccounts()
 	{
 		List<BankAccount> bankAccounts = accountService.findAll();
-		return ResponseEntity.ok(bankAccounts);
+		return bankAccounts.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(bankAccounts);
 	}
 
 	@PutMapping("/update/{id}")
-	public ResponseEntity<BankAccount> updateAccount(@RequestHeader("Authorization") String authorizationHeader,
-		@PathVariable Long id, @RequestBody BankAccount bankAccountDetails)
+	public ResponseEntity<BankAccount> updateAccount(@PathVariable Long id, @RequestBody BankAccount bankAccountDetails)
 	{
-
-
-		BankAccount existingBankAccount = accountService.findById(id)
-			.orElseThrow(() -> new EntityNotFoundException("Bank account not found with id: " + id));
-
-		if (bankAccountDetails.getName() != null)
-			existingBankAccount.setName(bankAccountDetails.getName());
-		if (bankAccountDetails.getAccountType() != null)
-			existingBankAccount.setAccountType(bankAccountDetails.getAccountType());
-
-		BankAccount updatedBankAccount = accountService.save(existingBankAccount);
-		return ResponseEntity.ok(updatedBankAccount);
-
+		try
+		{
+			BankAccount updatedBankAccount = accountService.updateBankAccount(id, bankAccountDetails);
+			return ResponseEntity.ok(updatedBankAccount);
+		}
+		catch (EntityNotFoundException e)
+		{
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
+		catch (Exception e)
+		{
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
 	}
 
 
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Void> deleteAccount(@PathVariable Long id)
 	{
-		accountService.deleteById(id);
-		return ResponseEntity.ok().build();
+		return accountService.deleteById(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
 	}
 
 	@PostMapping("/processTransaction")
 	public ResponseEntity<String> transfer(@RequestBody TransRequest trans)
 	{
-		accountService.processTransaction(trans);
-		return ResponseEntity.ok("Transfer successful.");
-	}
-
-	@GetMapping("/transactions/{id}")
-	public ResponseEntity<List<Transaction>> getTransactionsForAccount(@PathVariable Long id)
-	{
-		List<Transaction> transactions = accountService.getAllTransactions(id);
-		return ResponseEntity.ok(transactions);
+		try
+		{
+			accountService.processTransaction(trans);
+			return ResponseEntity.ok("Transfer successful.");
+		}
+		catch (EntityNotFoundException | IllegalArgumentException | InsufficientFundsException e)
+		{
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
 	}
 
 }

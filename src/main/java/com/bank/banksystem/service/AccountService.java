@@ -1,4 +1,4 @@
-package com.bank.banksystem.service.implService;
+package com.bank.banksystem.service;
 
 import com.bank.banksystem.controller.transRequest.TransRequest;
 import com.bank.banksystem.entity.bank_account_entity.AccountType;
@@ -8,9 +8,9 @@ import com.bank.banksystem.entity.transaction_entity.Transaction;
 import com.bank.banksystem.entity.user_entity.User;
 import com.bank.banksystem.exceptions.InsufficientFundsException;
 import com.bank.banksystem.repository.AccountRepository;
-import com.bank.banksystem.service.AbstractService;
+import com.bank.banksystem.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,22 +22,16 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-public class AccountServiceImpl extends AbstractService<BankAccount, Long>
+@AllArgsConstructor
+public class AccountService
 {
 
-	private final TransactionServiceImpl transactionService;
-	private final UserServiceImpl userService;
+	private final TransactionService transactionService;
+	private final UserService userService;
+	private final AccountRepository accountRepository;
+	private final UserRepository userRepository;
 
-	@Autowired
-	public AccountServiceImpl(AccountRepository repository, TransactionServiceImpl transactionService,
-		UserServiceImpl userService)
-	{
-		super(repository);
-		this.userService = userService;
-		this.transactionService = transactionService;
-	}
 
-	@Override
 	@Transactional
 	public BankAccount save(BankAccount account)
 	{
@@ -46,7 +40,7 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 			account.setAccountNumber(generateUniqueAccountNumber());
 			account.setBalance(BigDecimal.valueOf(100000));
 		}
-		return super.save(account);
+		return accountRepository.save(account);
 	}
 
 	private String generateUniqueAccountNumber()
@@ -56,17 +50,17 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 		{
 			accountNumber = "CZ100025" + ThreadLocalRandom.current().nextInt(10000, 100000);
 		}
-		while (((AccountRepository)repository).existsByAccountNumber(accountNumber));
+		while (accountRepository.existsByAccountNumber(accountNumber));
 
 		return accountNumber;
 	}
 
 	@Transactional
-	public void processTransaction(TransRequest trans) throws EntityNotFoundException, IllegalArgumentException
+	public void processTransaction(TransRequest trans)
 	{
 		String accountNumber = trans.getAccountNumber();
 		BankAccount fromBankAccount;
-		fromBankAccount = ((AccountRepository)repository).findByAccountNumber(accountNumber)
+		fromBankAccount = accountRepository.findByAccountNumber(accountNumber)
 			.orElseThrow(() -> new EntityNotFoundException("Neplatné číslo vašeho účtu"));
 
 		Transaction transaction = new Transaction();
@@ -83,7 +77,7 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 			case TRANSFER ->
 			{
 				String toAccountNumber = trans.getToAccountNumber();
-				BankAccount toBankAccount = ((AccountRepository)repository).findByAccountNumber(toAccountNumber)
+				BankAccount toBankAccount = accountRepository.findByAccountNumber(toAccountNumber)
 					.orElseThrow(() -> new EntityNotFoundException("Zadejte platné číslo protiúčtu"));
 				handleTransfer(trans, fromBankAccount, toBankAccount);
 				transaction.setToAccount(toBankAccount);
@@ -93,8 +87,7 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 		};
 
 		fromBankAccount.setBalance(newBalance);
-		super.save(fromBankAccount);
-
+		accountRepository.save(fromBankAccount);
 		transactionService.save(transaction);
 	}
 
@@ -115,40 +108,24 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 		{
 			throw new IllegalArgumentException("Částka nesmí být záporná");
 		}
-		BigDecimal fromAccountBalance = fromBankAccount.getBalance();
-		if (fromAccountBalance.compareTo(amount) < 0)
+		if (fromBankAccount.getBalance().compareTo(amount) < 0)
 		{
 			throw new InsufficientFundsException("Nedostatěčný zůstatek na účtě");
 		}
 		toBankAccount.setBalance(toBankAccount.getBalance().add(amount));
-		super.save(toBankAccount);
-	}
-
-	@Transactional(readOnly = true)
-	public List<Transaction> getAllTransactions(Long accountId)
-	{
-		BankAccount bankAccount = super.findById(accountId)
-			.orElseThrow(() -> new EntityNotFoundException("Bank account not found with id: " + accountId));
-		return bankAccount.getTransactions();
-	}
-
-
-	public List<BankAccount> getAllAccountByUsername(String username)
-	{
-		return super.findAll().stream().filter(account -> account.getUser().getUsername().equals(username)).toList();
+		accountRepository.save(toBankAccount);
 	}
 
 	@Scheduled(cron = "0 0 14 * * ?")
 	public void addDailySalary()
 	{
 
-		List<User> users = userService.findAll();
+		List<User> users = userRepository.findAll();
 		BigDecimal salary = BigDecimal.valueOf(1500);
-		Optional<BankAccount> salaryAccount = repository.findById(1L);
 
 		for (User user : users)
 		{
-			List<BankAccount> accounts = ((AccountRepository)repository).findAccountsByUserId(user.getId());
+			List<BankAccount> accounts = accountRepository.findAccountsByUserId(user.getId());
 
 			if (!accounts.isEmpty())
 			{
@@ -163,7 +140,7 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 
 				firstAccount.setBalance(firstAccount.getBalance().add(salary));
 
-				repository.save(firstAccount);
+				accountRepository.save(firstAccount);
 			}
 		}
 	}
@@ -172,11 +149,11 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 	public void addDailySavingBonus()
 	{
 
-		List<User> users = userService.findAll();
+		List<User> users = userRepository.findAll();
 
 		for (User user : users)
 		{
-			List<BankAccount> accounts = ((AccountRepository)repository).findAccountsByUserId(user.getId());
+			List<BankAccount> accounts = accountRepository.findAccountsByUserId(user.getId());
 
 			BankAccount savingAccount = accounts.stream()
 				.filter(bankAccount -> bankAccount.getAccountType() == AccountType.SAVINGS).findFirst().orElse(null);
@@ -194,9 +171,70 @@ public class AccountServiceImpl extends AbstractService<BankAccount, Long>
 
 				savingAccount.setBalance(savingAccount.getBalance().add(savingAccount.getBalance().multiply(percentage)));
 
-				repository.save(savingAccount);
+				accountRepository.save(savingAccount);
 			}
 		}
 	}
 
+	@Transactional
+	public BankAccount createAccountForUser(String username, BankAccount bankAccount)
+	{
+		Optional<User> currentUser = userService.getUserByEmail(username);
+
+		if (currentUser.isPresent())
+		{
+			bankAccount.setUser(currentUser.get());
+			bankAccount.setBalance(BigDecimal.valueOf(5000.00));
+			return this.save(bankAccount);
+		}
+		else
+		{
+			throw new RuntimeException("User not found");
+		}
+	}
+
+	@Transactional
+	public Optional<BankAccount> findById(Long accountId)
+	{
+		return accountRepository.findById(accountId);
+	}
+
+	@Transactional
+	public List<BankAccount> findAll()
+	{
+		return accountRepository.findAll();
+	}
+
+	@Transactional
+	public boolean deleteById(Long accountId)
+	{
+
+		if (accountRepository.existsById(accountId))
+		{
+			accountRepository.deleteById(accountId);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	@Transactional
+	public BankAccount updateBankAccount(Long id, BankAccount bankAccountDetails)
+	{
+		BankAccount existingBankAccount = accountRepository.findById(id)
+			.orElseThrow(() -> new EntityNotFoundException("Bank account not found with id: " + id));
+
+		if (bankAccountDetails.getName() != null)
+		{
+			existingBankAccount.setName(bankAccountDetails.getName());
+		}
+		if (bankAccountDetails.getAccountType() != null)
+		{
+			existingBankAccount.setAccountType(bankAccountDetails.getAccountType());
+		}
+
+		return accountRepository.save(existingBankAccount);
+	}
 }

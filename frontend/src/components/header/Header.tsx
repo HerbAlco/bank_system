@@ -9,7 +9,6 @@ const Header: React.FC = () => {
   const { setSelectedAccount, setSelectedAccountId } = useAccountContext();
 
   const handleLogout = () => {
-    console.log('Odhlášení uživatele');
     setSelectedAccount(null);
     setSelectedAccountId(null);
     localStorage.removeItem('token');

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { useAccountContext } from './AccountContext';
 
 const checkTokenValidity = async (token: string) => {
     try {
@@ -19,6 +20,7 @@ const ProtectedRoute = () => {
     const [isValid, setIsValid] = useState<boolean | null>(null);
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
+    const { setSelectedAccount, setSelectedAccountId } = useAccountContext();
 
     useEffect(() => {
         const verifyToken = async () => {
@@ -26,9 +28,15 @@ const ProtectedRoute = () => {
                 const valid = await checkTokenValidity(token);
                 setIsValid(valid);
                 if (!valid) {
+                    setSelectedAccount(null);
+                    setSelectedAccountId(null);
+                    localStorage.removeItem('token');
                     navigate('/login');
                 }
             } else {
+                setSelectedAccount(null);
+                setSelectedAccountId(null);
+                localStorage.removeItem('token');
                 navigate('/login');
             }
         };

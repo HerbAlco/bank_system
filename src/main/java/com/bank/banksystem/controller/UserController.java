@@ -1,18 +1,15 @@
 package com.bank.banksystem.controller;
 
-import com.bank.banksystem.entity.bank_account_entity.BankAccount;
 import com.bank.banksystem.entity.user_entity.User;
-import com.bank.banksystem.service.implService.AccountServiceImpl;
-import com.bank.banksystem.service.implService.UserServiceImpl;
+import com.bank.banksystem.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/auth/user")
@@ -20,126 +17,48 @@ import java.util.Optional;
 public class UserController
 {
 
-	private final UserServiceImpl userService;
-	private final AccountServiceImpl accountService;
+	private final UserService userService;
 
-	@PostMapping("/add")
-	public ResponseEntity<User> addUser(@RequestBody User user)
+	@PostMapping("/create")
+	public ResponseEntity<User> addUser(@Valid @RequestBody User user)
 	{
-		//TODO: vytvoření accountu pro usera pri registraci nového usera
-		//		User savedUser = userService.save(user);
-		//		BankAccount newBankAccount = new BankAccount();
-		//		newBankAccount.setUser(savedUser);
-		//		newBankAccount.setBalance(BigDecimal.valueOf(100));
-		//		accountService.save(newBankAccount);
-
-		return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
+		User savedUser = userService.save(user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
 	}
 
 	@GetMapping("/allusers")
 	public ResponseEntity<List<User>> getAllUsers()
 	{
 		List<User> users = userService.findAll();
-		return ResponseEntity.ok(users);
+		return users.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(users);
 	}
 
 	@GetMapping("/getuser/{userId}")
 	public ResponseEntity<User> getUserById(@PathVariable Long userId)
 	{
-		Optional<User> user = userService.findById(userId);
-		return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+		return userService.findById(userId).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@PutMapping("/update/{userId}")
 	public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody User updatedUser)
 	{
-		Optional<User> existingUserOptional = userService.findById(userId);
-		if (existingUserOptional.isPresent())
-		{
-			User existingUser = existingUserOptional.get();
+		return userService.updateUser(userId, updatedUser).map(ResponseEntity::ok)
+			.orElseGet(() -> ResponseEntity.notFound().build());
 
-			if (updatedUser.getFirstName() != null)
-			{
-				existingUser.setFirstName(updatedUser.getFirstName());
-			}
-			if (updatedUser.getLastName() != null)
-			{
-				existingUser.setLastName(updatedUser.getLastName());
-			}
-			if (updatedUser.getEmail() != null)
-			{
-				existingUser.setEmail(updatedUser.getEmail());
-			}
-			if (updatedUser.getUsername() != null)
-			{
-				existingUser.setUsername(updatedUser.getUsername());
-			}
-			if (updatedUser.getPassword() != null)
-			{
-				existingUser.setPassword(updatedUser.getPassword());
-			}
-			if (updatedUser.getBirthDate() != null)
-			{
-				existingUser.setBirthDate(updatedUser.getBirthDate());
-			}
-			if (updatedUser.getAddress() != null)
-			{
-				existingUser.setAddress(updatedUser.getAddress());
-			}
-			if (updatedUser.getPhoneNumber() != null)
-			{
-				existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-			}
-			if (updatedUser.getRole() != null)
-			{
-				existingUser.setRole(updatedUser.getRole());
-			}
-
-			userService.save(existingUser);
-			return ResponseEntity.ok(existingUser);
-		}
-		else
-		{
-			return ResponseEntity.notFound().build();
-		}
 	}
-
 
 	@DeleteMapping("/delete/{userId}")
-	@Transactional
-	public ResponseEntity<String> deleteUser(@PathVariable Long userId)
+	public ResponseEntity<Void> deleteByUserId(@PathVariable Long userId)
 	{
-		Optional<User> user = userService.findById(userId);
-		if (user.isPresent())
-		{
-			userService.deleteById(userId);
-			return ResponseEntity.ok("User with ID " + userId + " has been successfully deleted.");
-		}
-		else
-		{
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with ID " + userId + " not found.");
-		}
+		return userService.deleteById(userId) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
 	}
 
-	@GetMapping("/getcurrentaccounts")
-	public ResponseEntity<List<BankAccount>> getCurrentAccounts()
-	{
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		List<BankAccount> accounts = accountService.getAllAccountByUsername(username);
-
-		if (accounts != null && !accounts.isEmpty())
-		{
-			return ResponseEntity.ok(accounts);
-		}
-		else
-		{
-			return ResponseEntity.noContent().build();
-		}
-	}
 	@GetMapping("/getcurrentuser")
-	public ResponseEntity<User> getCurrentUser(@RequestHeader("Authorization") String authorizationHeader){
+	public ResponseEntity<User> getCurrentUserDetails()
+	{
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		var currentUser = userService.getUserByEmail(username);
-		return currentUser.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+		return userService.getUserByEmail(username).map(ResponseEntity::ok)
+			.orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 	}
+
 }
