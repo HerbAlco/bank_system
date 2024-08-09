@@ -9,7 +9,7 @@ import { useAccountContext } from '../../accountContextApi/AccountContext';
 const Navbar: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const { setIsAuthenticated, user } = useAccountContext();
+  const { setIsAuthenticated, user, setSelectedAccount, setSelectedAccountId } = useAccountContext();
 
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -21,12 +21,19 @@ const Navbar: React.FC = () => {
     navigate(path);
   };
 
+  const handleBulletinBoard = (path: string) => () => {
+    setSelectedAccount(null);
+    setSelectedAccountId(null);
+    setIsAuthenticated(null);
+    navigate(path);
+  };
+
   return (
     <Box display="flex" justifyContent="center" alignItems="center" marginBottom={'50px'}>
       <AccountMenu />
       <AppBar position="static" sx={{ borderRadius: '10px' }}>
         <Toolbar>
-          <MenuItem onClick={handleNavigation('/home/accountsInfo')}>Nástěnka</MenuItem>
+          <MenuItem onClick={handleBulletinBoard('/home/accountsInfo')}>Nástěnka</MenuItem>
           <DropdownSendMoney />
           <DropdownView />
           <MenuItem >Platební karty</MenuItem>

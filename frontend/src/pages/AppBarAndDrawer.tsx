@@ -12,7 +12,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
-import { mainListItems, secondaryListItems } from './dashboard/listItems';
+import { MainListItems, secondaryListItems } from './dashboard/listItems';
+import { Outlet } from 'react-router-dom';
 
 const drawerWidth: number = 240;
 
@@ -67,7 +68,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const theme = createTheme();
 
 interface AppBarAndDrawerProps {
-    children: React.ReactNode;
+    children?: React.ReactNode;
 }
 
 const AppBarAndDrawer: React.FC<AppBarAndDrawerProps> = ({ children }) => {
@@ -129,7 +130,7 @@ const AppBarAndDrawer: React.FC<AppBarAndDrawerProps> = ({ children }) => {
                     </Toolbar>
                     <Divider />
                     <List component="nav">
-                        {mainListItems}
+                        <MainListItems />
                         <Divider sx={{ my: 1 }} />
                         {secondaryListItems}
                     </List>
@@ -147,7 +148,7 @@ const AppBarAndDrawer: React.FC<AppBarAndDrawerProps> = ({ children }) => {
                     }}
                 >
                     <Toolbar />
-                    {children}
+                    {children || <Outlet />}
                 </Box>
             </Box>
         </ThemeProvider>

@@ -9,41 +9,47 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import { useNavigate } from 'react-router-dom';
+import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded';
 
-export const mainListItems = (
-    <React.Fragment>
-        <ListItemButton>
-            <ListItemIcon>
-                <DashboardIcon />
-            </ListItemIcon>
-            <ListItemText primary="Dashboard" />
-        </ListItemButton>
-        <ListItemButton>
-            <ListItemIcon>
-                <ShoppingCartIcon />
-            </ListItemIcon>
-            <ListItemText primary="Orders" />
-        </ListItemButton>
-        <ListItemButton>
-            <ListItemIcon>
-                <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Customers" />
-        </ListItemButton>
-        <ListItemButton>
-            <ListItemIcon>
-                <BarChartIcon />
-            </ListItemIcon>
-            <ListItemText primary="Reports" />
-        </ListItemButton>
-        <ListItemButton>
-            <ListItemIcon>
-                <LayersIcon />
-            </ListItemIcon>
-            <ListItemText primary="Integrations" />
-        </ListItemButton>
-    </React.Fragment>
-);
+export const MainListItems = () => {
+    const navigate = useNavigate();
+
+    return (
+        <React.Fragment>
+            <ListItemButton onClick={() => navigate('/dashboard')}>
+                <ListItemIcon>
+                    <DashboardIcon />
+                </ListItemIcon>
+                <ListItemText primary="Přehled" />
+            </ListItemButton>
+            <ListItemButton onClick={() => navigate('/orders')}>
+                <ListItemIcon>
+                    <ShoppingCartIcon />
+                </ListItemIcon>
+                <ListItemText primary="Objednávky" />
+            </ListItemButton>
+            <ListItemButton onClick={() => navigate('/customers')}>
+                <ListItemIcon>
+                    <PeopleIcon />
+                </ListItemIcon>
+                <ListItemText primary="Lidé" />
+            </ListItemButton>
+            <ListItemButton onClick={() => navigate('/reports')}>
+                <ListItemIcon>
+                    <BarChartIcon />
+                </ListItemIcon>
+                <ListItemText primary="Novinky" />
+            </ListItemButton>
+            <ListItemButton onClick={() => navigate('/home/accountsInfo')}>
+                <ListItemIcon>
+                    <AccountBalanceRoundedIcon />
+                </ListItemIcon>
+                <ListItemText primary="Bankovní účet" />
+            </ListItemButton>
+        </React.Fragment>
+    );
+};
 
 export const secondaryListItems = (
     <React.Fragment>

@@ -10,6 +10,7 @@ import AccountDetails from './pages/mainPage/components/AccountDetails';
 import ProtectedRoute from './accountContextApi/ProtectedRoute';
 import UserDetails from './pages/mainPage/components/UserDetails';
 import AppBarAndDrawer from './pages/AppBarAndDrawer';
+import Dashboard from './pages/dashboard/Dashboard';
 
 const App: React.FC = () => {
   return (
@@ -20,12 +21,15 @@ const App: React.FC = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegistrationPage />} />
           <Route element={<ProtectedRoute />}>
-            <Route path="/home" element={<Home />}>
-              <Route path="createAccount" element={<CreateAccount />} />
-              <Route path="accountsInfo" element={<AccountsInfoTable />} />
-              <Route path="payment" element={<SendPayment />} />
-              <Route path="accountDetails" element={<AccountDetails />} />
-              <Route path="userDetails" element={<UserDetails />} />
+            <Route element={<AppBarAndDrawer />}>
+              <Route path="/home" element={<Home />}>
+                <Route path="createAccount" element={<CreateAccount />} />
+                <Route path="accountsInfo" element={<AccountsInfoTable />} />
+                <Route path="payment" element={<SendPayment />} />
+                <Route path="accountDetails" element={<AccountDetails />} />
+                <Route path="userDetails" element={<UserDetails />} />
+              </Route>
+              <Route path="/dashboard" element={<Dashboard />} />
             </Route>
           </Route>
         </Routes>

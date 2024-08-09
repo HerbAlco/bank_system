@@ -53,16 +53,10 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div>
-      <AppBarAndDrawer>
-        <Container sx={{ flex: 2 }}>
-
-          <Navbar />
-          <Outlet />
-        </Container>
-      </AppBarAndDrawer>
-
-    </div>
+    <Container sx={{ flex: 2 }}>
+      <Navbar />
+      <Outlet />
+    </Container>
   );
 };
 
