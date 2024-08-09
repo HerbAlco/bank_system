@@ -17,6 +17,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AccountData, useAccountContext, User } from '../../accountContextApi/AccountContext';
+import Header from '../../components/header/Header';
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -72,6 +73,7 @@ const LoginPage = () => {
 
   return (
     <>
+      <Header />
       <Container maxWidth="xs">
         <CssBaseline />
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>

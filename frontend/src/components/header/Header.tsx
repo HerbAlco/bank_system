@@ -32,7 +32,7 @@ const Header: React.FC = () => {
             component="div"
             sx={{ flexGrow: 1 }}
           >
-            Bankovní systém
+            Investiční sim
           </Typography>
           <Box>
             {isLoggedIn && !isLoginPage && !isRegisterPage ? (

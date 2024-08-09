@@ -15,6 +15,7 @@ import { LockOutlined, Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Header from "../../components/header/Header";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -58,6 +59,7 @@ const Register = () => {
 
   return (
     <>
+      <Header />
       <Container maxWidth="xs">
         <CssBaseline />
         <Box

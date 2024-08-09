@@ -4,6 +4,7 @@ import axios from 'axios';
 import { AccountData, useAccountContext, User } from '../../accountContextApi/AccountContext';
 import { Container } from '@mui/system';
 import Navbar from '../../components/navbar/Navbar';
+import AppBarAndDrawer from '../AppBarAndDrawer';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -53,10 +54,14 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <Container sx={{ flex: 2 }}>
-        <Navbar />
-        <Outlet />
-      </Container>
+      <AppBarAndDrawer>
+        <Container sx={{ flex: 2 }}>
+
+          <Navbar />
+          <Outlet />
+        </Container>
+      </AppBarAndDrawer>
+
     </div>
   );
 };
